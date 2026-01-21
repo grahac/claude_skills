@@ -1,5 +1,5 @@
 ---
-name: granola
+name: granola-scoop
 description: Extract and display Granola meeting notes. USE WHEN user asks to "extract granola meetings", "analyze my meetings", "what meetings did I have", or "show my meeting notes".
 ---
 
