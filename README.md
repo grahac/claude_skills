@@ -1,6 +1,6 @@
 # Claude Code Skills
 
-A collection of custom skills for [Claude Code](https://claude.ai/claude-code).
+Personal productivity skills for [Claude Code](https://claude.ai/claude-code) — tools for development, meetings, writing, and security.
 
 ## Installation
 
@@ -15,6 +15,61 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 ```
 
 ## Available Skills
+
+### granola-scoop
+
+Extracts meeting notes from [Granola's](https://granola.ai) local cache — no API needed.
+
+**Use when:**
+- Extracting recent meeting notes ("extract my granola meetings")
+- Reviewing what meetings you had ("what meetings did I have this week?")
+- Searching meeting content for people or topics
+
+**Output:** Markdown files saved to `~/.granola-scoop/output/` with meeting metadata, your notes, and AI summaries.
+
+**Invoke:** `/granola-scoop`
+
+---
+
+### marketing-copywriter
+
+Creates compelling marketing copy for landing pages, emails, ads, and product messaging.
+
+**Use when:**
+- Writing landing page copy
+- Crafting email campaigns
+- Creating ad copy
+- Developing product messaging and value propositions
+- Improving existing marketing copy
+
+**Key principles:**
+- Clarity over cleverness
+- Audience-first messaging
+- Specific outcomes over vague promises
+- Avoids AI-sounding patterns (no "elevate", "seamless", "unlock your potential")
+
+**Invoke:** `/marketing-copywriter`
+
+---
+
+### security-audit-skills
+
+Performs security audits of your Claude Code configuration — skills, plugins, hooks, and permission allowlists.
+
+**Use when:**
+- Periodically reviewing your Claude setup for security issues
+- After installing new plugins or skills
+- Before sharing your configuration with others
+
+**Key principles:**
+- Nothing is silently skipped — ignored items are shown in a "Previously Reviewed" section
+- Flags risky permission patterns (wildcard bash, unrestricted network access)
+- Identifies third-party plugins that need review
+- Checks for hooks with broad access
+
+**Invoke:** `/security-audit-skills`
+
+---
 
 ### elixir-simplifier
 
