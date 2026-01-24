@@ -7,6 +7,8 @@ description: Perform security audit of Claude Code skills, plugins, agents, and 
 
 Perform a comprehensive security review of all Claude Code skills, plugins, agents, hooks, and permission configurations.
 
+> **Note:** This is a baseline check, not comprehensive security. It catches common misconfigurations and low-effort threats. Sophisticated attacks may evade pattern-based detection. Always review third-party code before installing.
+
 ## When to Use
 
 - Periodically review your Claude Code setup for security issues
