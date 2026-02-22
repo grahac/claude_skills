@@ -14,7 +14,57 @@ git clone https://github.com/grahac/claude_skills.git ~/.claude/skills/claude_sk
 cp -r skills/elixir-simplifier ~/.claude/skills/
 ```
 
-## Available Skills
+## Skills
+
+- [changelog](#changelog)
+- [elixir-simplifier](#elixir-simplifier)
+- [granola-scoop](#granola-scoop)
+- [marketing-copywriter](#marketing-copywriter)
+- [security-audit-skills](#security-audit-skills)
+
+---
+
+### changelog
+
+Creates and manages `CHANGELOG.md` following the [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) spec.
+
+**Use when:**
+- Adding recent changes to the changelog
+- Preparing a release and versioning the changelog
+- Creating a CHANGELOG.md from scratch
+
+**Key principles:**
+- Reads git history to extract what changed — never invents entries
+- Organizes changes into Added, Changed, Deprecated, Removed, Fixed, Security
+- Supports `[Unreleased]` workflow and cutting versioned releases with comparison links
+
+**Invoke:** `/changelog`
+
+---
+
+### elixir-simplifier
+
+Simplifies and refines Elixir/Phoenix/LiveView code with a focus on **removing duplicate code**.
+
+**Use when:**
+- Finding and removing duplicate code across modules
+- Extracting repeated patterns into shared components
+- Reviewing recently written Elixir/Phoenix/LiveView code
+- Refactoring existing code for clarity
+- Checking if code follows Phoenix patterns
+
+**Key principles:**
+- DRY - Remove duplicate code (primary focus)
+- KISS - Keep it simple
+- LiveView over JavaScript
+- Phoenix context patterns (no Repo in `_web` modules)
+- HEEx `{}` syntax over `<%= %>`
+- No hardcoded color hex codes
+- No defensive fallbacks - let it crash
+
+**Invoke:** `/elixir-simplifier`
+
+---
 
 ### granola-scoop
 
@@ -70,28 +120,6 @@ Performs security audits of your Claude Code configuration — skills, plugins, 
 **Invoke:** `/security-audit-skills`
 
 ---
-
-### elixir-simplifier
-
-Simplifies and refines Elixir/Phoenix/LiveView code with a focus on **removing duplicate code**.
-
-**Use when:**
-- Finding and removing duplicate code across modules
-- Extracting repeated patterns into shared components
-- Reviewing recently written Elixir/Phoenix/LiveView code
-- Refactoring existing code for clarity
-- Checking if code follows Phoenix patterns
-
-**Key principles:**
-- DRY - Remove duplicate code (primary focus)
-- KISS - Keep it simple
-- LiveView over JavaScript
-- Phoenix context patterns (no Repo in `_web` modules)
-- HEEx `{}` syntax over `<%= %>`
-- No hardcoded color hex codes
-- No defensive fallbacks - let it crash
-
-**Invoke:** `/elixir-simplifier`
 
 ## Contributing
 
