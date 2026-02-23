@@ -20,6 +20,7 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 - [elixir-simplifier](#elixir-simplifier)
 - [granola-scoop](#granola-scoop)
 - [marketing-copywriter](#marketing-copywriter)
+- [prompt-cache-optimizer](#prompt-cache-optimizer)
 - [security-audit-skills](#security-audit-skills)
 
 ---
@@ -99,6 +100,27 @@ Creates compelling marketing copy for landing pages, emails, ads, and product me
 - Avoids AI-sounding patterns (no "elevate", "seamless", "unlock your potential")
 
 **Invoke:** `/marketing-copywriter`
+
+---
+
+### prompt-cache-optimizer
+
+Audits hooks and AI/LLM API calls for prompt caching anti-patterns, then produces concrete fixes to maximize cache hit rate and reduce API costs.
+
+**Use when:**
+- Reviewing Claude Code hooks for cache-breaking patterns
+- Auditing project AI/LLM calls for suboptimal prompt structure
+- Reducing AI API costs through better caching
+- Diagnosing low prompt cache hit rates
+
+**Key principles:**
+- Scans `~/.claude/settings.json` and project settings for hooks
+- Classifies injected data as globally static / project static / session static / frequently dynamic
+- Makes guesses about dynamic vs static data, then confirms with you before generating fixes
+- Produces before/after code examples for every issue found
+- Never changes tools mid-session; never silently assumes
+
+**Invoke:** `/prompt-cache-optimizer`
 
 ---
 
