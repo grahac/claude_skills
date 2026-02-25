@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beanstalk — The Specialty Coffee Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dark-bg: #1C0F07;
+    --light-bg: #FAF6F0;
+    --card-dark-bg: rgba(255,255,255,0.07);
+    --card-dark-border: rgba(255,255,255,0.12);
+    --card-light-bg: #F2EAE0;
+    --card-light-border: #C4A882;
+    --text-dark-heading: #FFF8F0;
+    --text-dark-body: #D4B896;
+    --text-light-heading: #1C0F07;
+    --text-light-body: #4A3728;
+    --accent: #D97706;
+    --accent-light: #FCD34D;
+    --font: 'DM Sans', sans-serif;
+  }
+
+  html, body { height: 100%; font-family: var(--font); overflow: hidden; }
+
+  .presentation {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .slide {
+    scroll-snap-align: start;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 48px 64px;
+  }
+
+  .slide.dark { background-color: var(--dark-bg); color: var(--text-dark-heading); }
+  .slide.light { background-color: var(--light-bg); color: var(--text-light-heading); }
+
+  /* Steam texture on dark slides */
+  .slide.dark.steam {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='900'%3E%3Ccircle cx='200' cy='150' r='300' fill='none' stroke='white' stroke-width='1' opacity='0.03'/%3E%3Ccircle cx='200' cy='150' r='500' fill='none' stroke='white' stroke-width='1' opacity='0.02'/%3E%3Ccircle cx='1200' cy='700' r='400' fill='none' stroke='white' stroke-width='1' opacity='0.03'/%3E%3Ccircle cx='1200' cy='700' r='650' fill='none' stroke='white' stroke-width='1' opacity='0.02'/%3E%3Ccircle cx='720' cy='450' r='350' fill='none' stroke='white' stroke-width='1' opacity='0.025'/%3E%3C/svg%3E"),
+      linear-gradient(160deg, #1C0F07 0%, #2D1810 100%);
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+
+  /* Slide counter */
+  #slide-counter {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    background: var(--dark-bg);
+    color: var(--accent-light);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    z-index: 100;
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(217,119,6,0.3);
+  }
+
+  /* Nav arrow */
+  #nav-arrow {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(250,246,240,0.9);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s, transform 0.2s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  #nav-arrow:hover { transform: translateX(-50%) translateY(2px); }
+  #nav-arrow.hidden { opacity: 0; pointer-events: none; }
+
+  /* Shared typography */
+  .slide-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .slide-h1-dark {
+    font-size: clamp(32px, 4.5vw, 58px);
+    font-weight: 700;
+    color: var(--text-dark-heading);
+    line-height: 1.1;
+  }
+
+  .slide-h1-light {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--text-light-heading);
+    line-height: 1.1;
+  }
+
+  .slide-h2-dark {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 300;
+    color: var(--text-dark-body);
+    line-height: 1.5;
+  }
+
+  /* ─── SLIDE 1: TITLE ─── */
+  .s1-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0;
+  }
+
+  .s1-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+
+  .s1-bean {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .s1-title {
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 700;
+    color: var(--text-dark-heading);
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .s1-subtitle {
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: 300;
+    color: var(--text-dark-body);
+    letter-spacing: 0.01em;
+  }
+
+  /* ─── SLIDE 2: THE PROBLEM ─── */
+  .s2-layout {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .s2-header { text-align: center; }
+
+  .stat-row {
+    width: 100%;
+    display: flex;
+    gap: 0;
+    border: 1.5px solid var(--card-light-border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .stat-cell {
+    flex: 1;
+    padding: 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-cell + .stat-cell {
+    border-left: 1px solid rgba(196,168,130,0.35);
+  }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-light-heading);
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .stat-value {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .stat-detail {
+    font-size: 13px;
+    color: var(--text-light-body);
+    margin-top: 2px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .card-light {
+    background: var(--card-light-bg);
+    border: 1.5px solid var(--card-light-border);
+    border-radius: 16px;
+    padding: 24px 24px 20px;
+  }
+
+  .card-dark {
+    background: var(--card-dark-bg);
+    border: 1px solid var(--card-dark-border);
+    border-radius: 16px;
+    padding: 24px 24px 20px;
+  }
+
+  .card-title-light {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-light-heading);
+    margin-bottom: 12px;
+  }
+
+  .card-title-dark {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark-heading);
+    margin-bottom: 12px;
+  }
+
+  .bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .bullets li {
+    font-size: 14px;
+    color: var(--text-light-body);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .bullets.dark li { color: var(--text-dark-body); }
+
+  /* ─── SLIDE 3: VISION ─── */
+  .s3-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 28px;
+    width: 100%;
+    max-width: 840px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .pillar-card {
+    background: var(--card-dark-bg);
+    border: 1px solid var(--card-dark-border);
+    border-radius: 16px;
+    padding: 28px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .pillar-icon { font-size: 36px; }
+
+  .pillar-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark-heading);
+  }
+
+  .pillar-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-dark-body);
+    line-height: 1.5;
+  }
+
+  /* ─── SLIDE 4: SUPPLY CHAIN ─── */
+  .s4-layout {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .chain-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 20px 24px;
+    background: var(--card-light-bg);
+    border: 1.5px solid var(--card-light-border);
+    border-radius: 14px;
+  }
+
+  .chain-step {
+    background: var(--dark-bg);
+    color: var(--accent-light);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 24px;
+    white-space: nowrap;
+  }
+
+  .chain-arrow {
+    color: var(--text-light-body);
+    opacity: 0.35;
+    font-size: 20px;
+    padding: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .callout-amber {
+    background: rgba(217,119,6,0.08);
+    border: 1.5px solid var(--accent);
+    border-radius: 12px;
+    padding: 16px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light-heading);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* ─── SLIDE 5: BIG STATEMENT ─── */
+  .s5-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 700px;
+  }
+
+  .big-stat {
+    font-size: clamp(56px, 10vw, 96px);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--accent-light);
+    line-height: 1.0;
+  }
+
+  .big-stat-label {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 300;
+    color: var(--text-dark-body);
+    line-height: 1.5;
+    max-width: 480px;
+  }
+
+  .big-stat-source {
+    font-size: 12px;
+    color: var(--text-dark-body);
+    opacity: 0.5;
+    font-style: italic;
+  }
+
+  /* ─── SLIDE 6: MARKET BREAKDOWN ─── */
+  .s6-layout {
+    width: 100%;
+    max-width: 980px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .s6-header { text-align: center; margin-bottom: 8px; }
+
+  .bar-chart {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px 32px;
+    background: var(--card-light-bg);
+    border: 1.5px solid var(--card-light-border);
+    border-radius: 16px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .bar-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-light-body);
+    width: 140px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: rgba(196,168,130,0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #1C0F07, var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+
+  .bar-fill span {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  /* ─── SLIDE 7: ROAST SCIENCE ─── */
+  .s7-layout {
+    width: 100%;
+    max-width: 880px;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .roast-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .roast-stage {
+    background: var(--card-dark-bg);
+    border: 1px solid var(--card-dark-border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .roast-temp {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    width: 72px;
+    flex-shrink: 0;
+  }
+
+  .roast-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark-heading);
+  }
+
+  .roast-note {
+    font-size: 12px;
+    color: var(--text-dark-body);
+    margin-top: 2px;
+  }
+
+  .roast-detail-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .metric-row {
+    display: flex;
+    gap: 16px;
+  }
+
+  .metric-box {
+    flex: 1;
+    background: var(--card-dark-bg);
+    border: 1px solid var(--card-dark-border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .metric-val {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    color: var(--text-dark-body);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* ─── SLIDE 8: ROADMAP ─── */
+  .s8-layout {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .s8-header { text-align: center; }
+
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .roadmap-card {
+    background: var(--card-light-bg);
+    border: 1.5px solid var(--card-light-border);
+    border-radius: 16px;
+    padding: 24px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .roadmap-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(196,168,130,0.3);
+  }
+
+  .roadmap-phase {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(217,119,6,0.1);
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
+  .roadmap-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-light-heading);
+  }
+
+  /* ─── SLIDE 9: CTA ─── */
+  .s9-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+    max-width: 700px;
+  }
+
+  .s9-big {
+    font-size: clamp(38px, 5.5vw, 64px);
+    font-weight: 700;
+    color: var(--text-dark-heading);
+    line-height: 1.1;
+  }
+
+  .s9-big em {
+    color: var(--accent-light);
+    font-style: normal;
+  }
+
+  .s9-sub {
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 300;
+    color: var(--text-dark-body);
+    line-height: 1.6;
+  }
+
+  .s9-contact {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="slide-counter">1 / 9</div>
+
+<button id="nav-arrow" aria-label="Next slide">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M10 4v12M4 10l6 6 6-6" stroke="#1C0F07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<div class="presentation" id="pres">
+
+  <!-- SLIDE 1: TITLE -->
+  <section class="slide dark steam" id="slide-1">
+    <div class="s1-content">
+      <span class="s1-eyebrow">Beanstalk Analytics · 2025</span>
+      <span class="s1-bean">☕</span>
+      <h1 class="s1-title">The Specialty<br>Coffee Report</h1>
+      <p class="s1-subtitle">From crop to cup — the data behind<br>a $110B global industry</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <section class="slide light" id="slide-2">
+    <div class="s2-layout">
+      <div class="s2-header">
+        <div class="slide-label">The Challenge</div>
+        <h2 class="slide-h1-light">Specialty coffee is booming.<br>But most of the value leaks out.</h2>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-cell">
+          <span class="stat-label">Farmer share of retail price</span>
+          <span class="stat-value">7–10%</span>
+          <span class="stat-detail">Avg. for a $6 latte at origin</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">Beans wasted post-harvest</span>
+          <span class="stat-value">~30%</span>
+          <span class="stat-detail">Due to inconsistent processing</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">Consumers who can identify origin</span>
+          <span class="stat-value">12%</span>
+          <span class="stat-detail">Despite willingness to pay premium</span>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card-light">
+          <div class="card-title-light">Supply side problems</div>
+          <ul class="bullets">
+            <li>Fragmented smallholder farms with no market data</li>
+            <li>Price volatility erodes long-term investment</li>
+            <li>No traceability from farm to roaster</li>
+          </ul>
+        </div>
+        <div class="card-light">
+          <div class="card-title-light">Demand side problems</div>
+          <ul class="bullets">
+            <li>Consumers want provenance but can't find it</li>
+            <li>Roasters struggle to differentiate on quality</li>
+            <li>Café margin compression squeezes specialty</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: VISION -->
+  <section class="slide dark steam" id="slide-3">
+    <div class="s3-layout">
+      <div>
+        <div class="slide-label">Our Vision</div>
+        <h2 class="slide-h1-dark">A transparent supply chain,<br>from seed to sip</h2>
+      </div>
+
+      <div class="three-col">
+        <div class="pillar-card">
+          <span class="pillar-icon">🌱</span>
+          <div class="pillar-title">Farm Intelligence</div>
+          <p class="pillar-desc">Real-time yield, soil, and microclimate data for 50,000+ smallholders</p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-icon">🔗</span>
+          <div class="pillar-title">Traceability</div>
+          <p class="pillar-desc">QR-linked lot tracking from harvest date to roast profile to your cup</p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-icon">📊</span>
+          <div class="pillar-title">Fair Pricing</div>
+          <p class="pillar-desc">Market-linked pricing that rewards quality and closes the farmer gap</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: SUPPLY CHAIN -->
+  <section class="slide light" id="slide-4">
+    <div class="s4-layout">
+      <div>
+        <div class="slide-label">How It Works</div>
+        <h2 class="slide-h1-light">The Beanstalk Pipeline</h2>
+      </div>
+
+      <div class="chain-flow">
+        <div class="chain-step">Farmer Harvest</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-step">Processing Mill</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-step">QC & Grading</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-step">Roaster Match</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-step">Consumer QR</div>
+      </div>
+
+      <div class="two-col">
+        <div class="card-light">
+          <div class="card-title-light">What we collect at origin</div>
+          <ul class="bullets">
+            <li>GPS farm boundary + altitude</li>
+            <li>Harvest date and lot weight</li>
+            <li>Processing method (washed / natural / honey)</li>
+            <li>Farmer ID and cooperative affiliation</li>
+          </ul>
+        </div>
+        <div class="card-light">
+          <div class="card-title-light">What roasters get</div>
+          <ul class="bullets">
+            <li>Cupping score + flavor notes from origin</li>
+            <li>Suggested roast profile range</li>
+            <li>Direct messaging with the farmer</li>
+            <li>Repeatable seasonal sourcing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout-amber">
+        <span>⚡</span>
+        <span>Average time from harvest to roaster contract: <strong>6 weeks</strong> vs. industry average of 4–6 months</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: BIG STATEMENT -->
+  <section class="slide dark steam" id="slide-5">
+    <div class="s5-content">
+      <div class="slide-label">The Opportunity</div>
+      <div class="big-stat">$47B</div>
+      <p class="big-stat-label">
+        in annual value that never reaches coffee-growing communities — trapped in opaque middlemen and commodity pricing
+      </p>
+      <p class="big-stat-source">Source: World Coffee Research & ICO, 2024</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: MARKET BREAKDOWN -->
+  <section class="slide light" id="slide-6">
+    <div class="s6-layout">
+      <div class="s6-header">
+        <div class="slide-label">Market Size</div>
+        <h2 class="slide-h1-light">Specialty coffee is the fastest-growing<br>segment in food & beverage</h2>
+      </div>
+
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-label">Specialty Retail</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 82%"><span>$34.2B</span></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Café & On-Premise</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 68%"><span>$28.5B</span></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Direct-to-Consumer</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 45%"><span>$18.8B</span></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Office & Hospitality</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 34%"><span>$14.1B</span></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Origin-Direct</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 14%"><span>$5.9B</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: ROAST SCIENCE -->
+  <section class="slide dark steam" id="slide-7">
+    <div class="s7-layout">
+      <div class="roast-visual">
+        <div class="slide-label">Roast Science</div>
+        <div class="roast-stage">
+          <div class="roast-temp">165°C</div>
+          <div>
+            <div class="roast-name">Light Roast</div>
+            <div class="roast-note">Floral, bright acidity, high origin clarity</div>
+          </div>
+        </div>
+        <div class="roast-stage">
+          <div class="roast-temp">195°C</div>
+          <div>
+            <div class="roast-name">Medium Roast</div>
+            <div class="roast-note">Balanced, caramel notes, moderate body</div>
+          </div>
+        </div>
+        <div class="roast-stage">
+          <div class="roast-temp">225°C</div>
+          <div>
+            <div class="roast-name">Dark Roast</div>
+            <div class="roast-note">Bold, smoky, low acidity, full body</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roast-detail-col">
+        <h2 class="slide-h1-dark">Precision roasting unlocks 30% more flavor compounds</h2>
+        <p class="slide-h2-dark">Beanstalk's origin data feeds directly into roaster profiles, eliminating trial batches.</p>
+        <div class="metric-row">
+          <div class="metric-box">
+            <span class="metric-val">94</span>
+            <span class="metric-label">Avg. cupping score</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val">3×</span>
+            <span class="metric-label">Fewer rejects</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-val">18s</span>
+            <span class="metric-label">Target extraction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <section class="slide light" id="slide-8">
+    <div class="s8-layout">
+      <div class="s8-header">
+        <div class="slide-label">Roadmap</div>
+        <h2 class="slide-h1-light">Building the infrastructure<br>for ethical coffee at scale</h2>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <div class="roadmap-card-header">
+            <span class="roadmap-phase">Q1 2025</span>
+            <span class="roadmap-title">Origin Network Launch</span>
+          </div>
+          <ul class="bullets">
+            <li>500 farms onboarded in Ethiopia & Colombia</li>
+            <li>IoT sensor deployment at 50 mills</li>
+            <li>Mobile app for field data capture</li>
+          </ul>
+        </div>
+        <div class="roadmap-card">
+          <div class="roadmap-card-header">
+            <span class="roadmap-phase">Q2 2025</span>
+            <span class="roadmap-title">Roaster Marketplace</span>
+          </div>
+          <ul class="bullets">
+            <li>Direct sourcing platform for 200 roasters</li>
+            <li>Lot-level quality matching algorithm</li>
+            <li>Seasonal contract automation</li>
+          </ul>
+        </div>
+        <div class="roadmap-card">
+          <div class="roadmap-card-header">
+            <span class="roadmap-phase">Q3 2025</span>
+            <span class="roadmap-title">Consumer Traceability</span>
+          </div>
+          <ul class="bullets">
+            <li>QR code rollout to 1,000 SKUs</li>
+            <li>Farm story pages with farmer profiles</li>
+            <li>Impact score visible at point of sale</li>
+          </ul>
+        </div>
+        <div class="roadmap-card">
+          <div class="roadmap-card-header">
+            <span class="roadmap-phase">Q4 2025</span>
+            <span class="roadmap-title">Global Expansion</span>
+          </div>
+          <ul class="bullets">
+            <li>Expand to Kenya, Guatemala, Vietnam</li>
+            <li>10,000 farms, 500 roasters, 5M scans</li>
+            <li>Series A fundraise</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: CTA -->
+  <section class="slide dark steam" id="slide-9">
+    <div class="s9-content">
+      <div class="slide-label">Let's Build This Together</div>
+      <h2 class="s9-big">Every great cup starts with<br><em>knowing where it came from.</em></h2>
+      <p class="s9-sub">
+        Beanstalk connects farmers, roasters, and coffee lovers
+        in a transparent ecosystem that rewards quality at every step.
+      </p>
+      <div class="s9-contact">hello@beanstalk.coffee · beanstalk.coffee</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const pres = document.getElementById('pres');
+  const counter = document.getElementById('slide-counter');
+  const arrow = document.getElementById('nav-arrow');
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function updateUI(idx) {
+    current = idx;
+    counter.textContent = `${idx + 1} / ${total}`;
+    if (idx >= total - 1) {
+      arrow.classList.add('hidden');
+    } else {
+      arrow.classList.remove('hidden');
+    }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        updateUI(Array.from(slides).indexOf(e.target));
+      }
+    });
+  }, { root: pres, threshold: 0.6 });
+
+  slides.forEach(s => observer.observe(s));
+
+  arrow.addEventListener('click', () => {
+    if (current < total - 1) {
+      slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      if (current < total - 1) slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+    }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      if (current > 0) slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  updateUI(0);
+</script>
+</body>
+</html>

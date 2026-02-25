@@ -16,12 +16,130 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 
 ## Skills
 
+### Product & Marketing
+
+- [hyperslide](#hyperslide)
+- [website-extractor](#website-extractor)
+- [marketing-copywriter](#marketing-copywriter)
+- [innovate](#innovate)
+
+### Development
+
+- [elixir-simplifier](#elixir-simplifier)
 - [prompt-cache-optimizer](#prompt-cache-optimizer)
 - [changelog](#changelog)
-- [elixir-simplifier](#elixir-simplifier)
+
+### Productivity
+
 - [granola-scoop](#granola-scoop)
-- [marketing-copywriter](#marketing-copywriter)
+
+### Security
+
 - [security-audit-skills](#security-audit-skills)
+
+---
+
+## Product & Marketing
+
+### hyperslide
+
+Generates polished, self-contained HTML slide deck presentations — no PowerPoint, no external tools.
+
+**Use when:**
+- Creating a presentation from a description, code, or problem statement
+- Building pitch decks, architecture overviews, research presentations
+- Turning any content into a visual slide deck
+
+**Key principles:**
+- Asks about content and visual style (URL or mood), then derives the palette and fonts
+- Produces a single `.html` file with scroll-snap navigation, keyboard controls, and a slide counter
+- Uses only inline CSS/JS — no external dependencies
+- Reviews the output in a browser and fixes visual issues before delivering
+
+**Invoke:** `/hyperslide`
+
+---
+
+### website-extractor
+
+Extracts all content and design information from a website to enable a complete rewrite.
+
+**Use when:**
+- Rewriting or redesigning an existing website
+- Creating a new version of a site based on the original
+- Auditing a site's copy, structure, and brand identity before rebuilding
+
+**Key principles:**
+- Captures page content, brand identity (colors, fonts, tone), navigation, section-by-section copy, and CTAs
+- Extracts colors from code (Tailwind classes, CSS variables), not screenshots
+- Saves a structured `site-extraction.md` document ready to pass to a rewrite agent
+
+**Invoke:** `/website-extractor`
+
+---
+
+### marketing-copywriter
+
+Creates compelling marketing copy for landing pages, emails, ads, and product messaging.
+
+**Use when:**
+- Writing landing page copy
+- Crafting email campaigns
+- Creating ad copy
+- Developing product messaging and value propositions
+- Improving existing marketing copy
+
+**Key principles:**
+- Clarity over cleverness
+- Audience-first messaging
+- Specific outcomes over vague promises
+- Avoids AI-sounding patterns (no "elevate", "seamless", "unlock your potential")
+
+**Invoke:** `/marketing-copywriter`
+
+---
+
+### innovate
+
+Identifies the single most innovative, high-leverage addition to any plan or proposal.
+
+**Use when:**
+- Asking "what am I missing?" or "what would you add?"
+- Wanting one unexpected but compelling improvement to a plan, spec, or strategy
+- Looking for the boldest move before committing to an approach
+
+**Key principles:**
+- Picks **one** thing — not a list
+- Must be non-obvious, concrete, and accretive (not just incrementally better)
+- Presents the idea with a clear argument for why it's the highest-leverage move available
+
+**Invoke:** `/innovate`
+
+---
+
+## Development
+
+### elixir-simplifier
+
+Simplifies and refines Elixir/Phoenix/LiveView code with a focus on **removing duplicate code**.
+
+**Use when:**
+- Finding and removing duplicate code across modules
+- Extracting repeated patterns into shared components
+- Reviewing recently written Elixir/Phoenix/LiveView code
+- Refactoring existing code for clarity
+- Checking if code follows Phoenix patterns
+
+**Key principles:**
+- DRY - Remove duplicate code (primary focus)
+- KISS - Keep it simple
+- LiveView over JavaScript
+- Phoenix context patterns (no Repo in `_web` modules)
+- HEEx `{}` syntax over `<%= %>`
+- No hardcoded color hex codes
+- No defensive fallbacks - let it crash
+
+**Invoke:** `/elixir-simplifier`
 
 ---
 
@@ -64,29 +182,7 @@ Creates and manages `CHANGELOG.md` following the [Keep a Changelog 1.1.0](https:
 
 ---
 
-### elixir-simplifier
-
-Simplifies and refines Elixir/Phoenix/LiveView code with a focus on **removing duplicate code**.
-
-**Use when:**
-- Finding and removing duplicate code across modules
-- Extracting repeated patterns into shared components
-- Reviewing recently written Elixir/Phoenix/LiveView code
-- Refactoring existing code for clarity
-- Checking if code follows Phoenix patterns
-
-**Key principles:**
-- DRY - Remove duplicate code (primary focus)
-- KISS - Keep it simple
-- LiveView over JavaScript
-- Phoenix context patterns (no Repo in `_web` modules)
-- HEEx `{}` syntax over `<%= %>`
-- No hardcoded color hex codes
-- No defensive fallbacks - let it crash
-
-**Invoke:** `/elixir-simplifier`
-
----
+## Productivity
 
 ### granola-scoop
 
@@ -103,26 +199,7 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 ---
 
-### marketing-copywriter
-
-Creates compelling marketing copy for landing pages, emails, ads, and product messaging.
-
-**Use when:**
-- Writing landing page copy
-- Crafting email campaigns
-- Creating ad copy
-- Developing product messaging and value propositions
-- Improving existing marketing copy
-
-**Key principles:**
-- Clarity over cleverness
-- Audience-first messaging
-- Specific outcomes over vague promises
-- Avoids AI-sounding patterns (no "elevate", "seamless", "unlock your potential")
-
-**Invoke:** `/marketing-copywriter`
-
----
+## Security
 
 ### security-audit-skills
 
