@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project uses date-based releases.
 
 ## [Unreleased]
 
@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `hyperslide` upgraded with two-font pairing (display + body), slide entry animations with staggered children, gradient mesh backgrounds, 15px minimum body text, and WCAG AA contrast guidance
 - `hyperslide` example updated to demonstrate all new design patterns
 
-## [0.2.7] - 2026-02-25
+## [2026-02-25]
 
 ### Added
 - `hyperslide` skill — generate polished single-file HTML presentations with scroll-snap navigation, keyboard controls, and a slide counter
@@ -32,5 +32,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Compiled `.skill` binary files from version control (skills are now directory-based only)
 
-[Unreleased]: https://github.com/grahac/claude_skills/compare/v0.2.7...HEAD
-[0.2.7]: https://github.com/grahac/claude_skills/compare/v0.2.6...v0.2.7
+[Unreleased]: https://github.com/grahac/claude_skills/compare/2026-02-25...HEAD
+[2026-02-25]: https://github.com/grahac/claude_skills/commits/main
