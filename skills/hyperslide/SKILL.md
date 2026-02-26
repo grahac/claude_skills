@@ -28,17 +28,35 @@ Do NOT ask for exact colors or fonts. You will derive these.
 
 ## Phase 2: Design
 
+**Commit to a BOLD aesthetic direction first.** Pick one and execute it with conviction — the worst result is a timid middle ground:
+- **Editorial/Magazine**: large italic display type, strong vertical rhythm, high contrast
+- **Luxury/Refined**: tight tracking, generous whitespace, subtle textures, restrained palette
+- **Energetic/Techy**: gradient fills, sharp geometric shapes, dynamic grid
+- **Warm/Organic**: earth tones, soft curves, generous roundness
+- **Brutalist/Raw**: off-grid placement, unexpected color, unapologetic weight
+
 From the style reference (URL or mood description), generate:
 - A `--dark-bg` and `--light-bg` (the two slide backgrounds)
 - An `--accent` color
 - Card and border colors derived from the palette
-- A Google Font pairing that fits the vibe (single family, 2–3 weights)
-- An optional SVG background texture for dark slides (inline data URI, 2–5% opacity)
+- Atmospheric backgrounds: gradient meshes, layered SVG textures, or noise — never plain solid fills
+- A **two-font pairing**: a distinctive display font for headings + a refined readable body font
+
+**Font rules:**
+- NEVER use Inter, Roboto, Arial, or system fonts — they are generic and forgettable
+- Display font options (choose one that fits the aesthetic): Fraunces, Cormorant Garamond, Playfair Display, Syne, Clash Display, Bebas Neue, Instrument Serif, Radio Canada Big, Libre Baskerville
+- Body font options: DM Sans, Plus Jakarta Sans, Outfit, Manrope, Lato, Literata, Source Serif 4
+- Load both via Google Fonts with the weights needed (300, 500/600, 700 for display; 400, 500 for body)
+
+**Contrast rules:**
+- Body text: minimum 4.5:1 contrast ratio against its background (WCAG AA)
+- `--text-dark-body` is a common failure point — muted colors often fail; verify the value
+- Large headings (≥24px bold): minimum 3:1 is acceptable but 4.5:1 is preferred
+- Never rely on light gray body text on white — it almost always fails
 
 Rules:
 - Never copy a site's layout — extract only its color language and typographic personality
 - Never hardcode hex values in layout CSS — always use `var(--x)`
-- Palette must have sufficient contrast (WCAG AA minimum)
 
 ## Phase 3: Structure
 
@@ -66,11 +84,18 @@ Each slide needs: a `slide-label` (eyebrow text), a headline, and supporting con
 Write the complete single-file HTML. Requirements:
 - All CSS in a `<style>` block in `<head>` — no external stylesheets
 - All JS in a `<script>` block before `</body>` — no external libraries
-- Google Fonts loaded via `<link>` tag
-- SVG background textures as inline data URIs
+- Google Fonts loaded via `<link>` tag (both display and body fonts)
+- Atmospheric backgrounds: gradient meshes or layered SVG textures as inline data URIs — never plain solid fills on dark slides
 - Charts as pure CSS div-based bars (no Chart.js, no D3)
 - Diagrams as SVG or styled HTML — no canvas
 - File saved as `[topic]-presentation.html` in the current working directory
+
+**Slide entry animations are required.** Every slide must animate its content in when it becomes visible:
+- Use `IntersectionObserver` to add an `.is-visible` class when a slide enters the viewport
+- Default state: `opacity: 0; transform: translateY(28px)`
+- Animated state: `opacity: 1; transform: translateY(0)` over 0.55s with `cubic-bezier(0.16, 1, 0.3, 1)` easing
+- Stagger direct child elements with 80–120ms `animation-delay` increments
+- Reset animation when slide leaves view so it replays on revisit
 
 Follow the patterns in `references/html-structure.md` exactly for:
 - Scroll-snap mechanics
@@ -78,6 +103,7 @@ Follow the patterns in `references/html-structure.md` exactly for:
 - Nav arrow (hides on last slide)
 - Keyboard navigation (ArrowDown/Up, Space, PageDown/Up)
 - CSS custom properties structure
+- Animation and font pairing patterns
 
 ## Phase 5: UX Review (if agent-browser is available)
 
@@ -106,10 +132,24 @@ Before delivering, self-audit against this checklist:
 
 **Design**
 - [ ] Dark and light slides genuinely alternate (not all one color)
+- [ ] Committed to a single bold aesthetic direction — not a timid middle ground
+- [ ] Dark slide backgrounds have atmospheric depth (gradient mesh or layered texture), not plain solid fills
 - [ ] Accent color appears consistently on labels, stats, and highlights
-- [ ] Typography uses `clamp()` for all headings
+- [ ] Two distinct fonts: a display font for headings and a body font for prose (never Inter/Roboto/Arial)
+- [ ] Typography uses `clamp()` for all headings — title slides at least `clamp(44px, 6.5vw, 80px)`
+- [ ] Body/prose text is 15px minimum — never 12–13px for paragraph content
 - [ ] Cards have consistent border-radius and border style
 - [ ] No slide feels empty — every slide has a visual element beyond text
+
+**Contrast & Readability**
+- [ ] Body text (dark slides): `--text-dark-body` passes 4.5:1 contrast against `--dark-bg`
+- [ ] Body text (light slides): `--text-light-body` passes 4.5:1 contrast against `--light-bg`
+- [ ] Slide labels (uppercase eyebrow text) pass 3:1 minimum — accent color on dark bg commonly fails this
+
+**Animation**
+- [ ] Every slide has an `.is-visible` triggered entry animation
+- [ ] Children stagger with 80–120ms delays (not all at once)
+- [ ] Animations reset when slide leaves view (replay on revisit)
 
 **Content**
 - [ ] Slide 1 is a strong title slide with a clear one-line descriptor
