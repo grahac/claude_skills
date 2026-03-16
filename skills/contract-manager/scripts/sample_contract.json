@@ -1,0 +1,81 @@
+{
+  "title": "Mutual Non-Disclosure Agreement",
+  "date": "March 10, 2026",
+  "parties": [
+    {
+      "name": "Acme Technologies, Inc.",
+      "role": "Party A",
+      "address": "123 Innovation Drive, Suite 400, Springfield, IL 62701"
+    },
+    {
+      "name": "Jane Doe Consulting, LLC",
+      "role": "Party B",
+      "address": "456 Oak Avenue, Suite 12, Portland, OR 97205"
+    }
+  ],
+  "recitals": "WHEREAS, each party possesses certain confidential and proprietary information relating to its business operations, technology, and strategic plans; and WHEREAS, each party desires to disclose and receive certain Confidential Information for the purpose of evaluating a potential business relationship between the parties; and WHEREAS, the parties wish to protect the confidentiality of such information pursuant to the terms and conditions of this Agreement; NOW, THEREFORE, in consideration of the mutual covenants and agreements set forth herein, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+  "sections": [
+    {
+      "number": "1",
+      "heading": "Definition of Confidential Information",
+      "content": "\"Confidential Information\" means any and all non-public, proprietary, or confidential information disclosed by either party to the other party, whether orally, in writing, electronically, or by any other means, including but not limited to trade secrets, inventions, patents, copyrights, technical data, business plans, financial information, customer lists, marketing strategies, software, algorithms, prototypes, and any analyses, compilations, studies, or other documents prepared by the Receiving Party that contain or reflect such information."
+    },
+    {
+      "number": "1.1",
+      "heading": "Exclusions from Confidential Information",
+      "content": "Confidential Information does not include information that: (a) is or becomes publicly available through no fault of the Receiving Party; (b) was already in the Receiving Party's possession prior to disclosure, as evidenced by written records; (c) is independently developed by the Receiving Party without use of or reference to the Confidential Information; or (d) is lawfully obtained from a third party who is not under any obligation of confidentiality with respect to such information."
+    },
+    {
+      "number": "1.2",
+      "heading": "Oral Disclosures",
+      "content": "Any Confidential Information disclosed orally shall be identified as confidential at the time of disclosure and confirmed in writing within thirty (30) days of such oral disclosure."
+    },
+    {
+      "number": "2",
+      "heading": "Obligations of the Receiving Party",
+      "content": "The Receiving Party agrees to: (a) hold the Confidential Information in strict confidence using the same degree of care that it uses to protect its own confidential information, but in no event less than reasonable care; (b) not disclose the Confidential Information to any third parties without the prior written consent of the Disclosing Party; and (c) use the Confidential Information solely for the purpose of evaluating the potential business relationship between the parties."
+    },
+    {
+      "number": "2.1",
+      "heading": "Permitted Disclosures",
+      "content": "Notwithstanding the foregoing, the Receiving Party may disclose Confidential Information to its employees, officers, directors, advisors, and agents who have a need to know such information for the permitted purpose and who are bound by confidentiality obligations no less restrictive than those contained herein."
+    },
+    {
+      "number": "3",
+      "heading": "Term and Termination",
+      "content": "This Agreement shall remain in effect for a period of two (2) years from the date first written above. The obligations of confidentiality set forth herein shall survive the termination or expiration of this Agreement for an additional period of three (3) years."
+    },
+    {
+      "number": "4",
+      "heading": "Return or Destruction of Confidential Information",
+      "content": "Upon the termination or expiration of this Agreement, or upon the written request of the Disclosing Party, the Receiving Party shall promptly return or destroy all Confidential Information in its possession, including all copies, extracts, and summaries thereof, and shall certify in writing that it has done so."
+    },
+    {
+      "number": "5",
+      "heading": "Remedies",
+      "content": "The parties acknowledge that any breach of this Agreement may cause irreparable harm to the Disclosing Party for which monetary damages would be an inadequate remedy. Accordingly, the Disclosing Party shall be entitled to seek injunctive or other equitable relief in addition to any other remedies available at law or in equity."
+    },
+    {
+      "number": "6",
+      "heading": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of Illinois, without regard to its conflict of laws principles. Any dispute arising under or in connection with this Agreement shall be subject to the exclusive jurisdiction of the state and federal courts located in Springfield, Illinois."
+    },
+    {
+      "number": "7",
+      "heading": "Entire Agreement",
+      "content": "This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior or contemporaneous oral or written agreements, representations, and understandings. This Agreement may not be amended or modified except by a written instrument signed by both parties."
+    }
+  ],
+  "signature_blocks": [
+    {
+      "party": "Acme Technologies, Inc.",
+      "name_line": "John A. Smith",
+      "title_line": "Chief Executive Officer"
+    },
+    {
+      "party": "Jane Doe Consulting, LLC",
+      "name_line": "Jane M. Doe",
+      "title_line": "Managing Partner"
+    }
+  ]
+}
