@@ -18,7 +18,7 @@ Extract meeting notes from Granola's local cache without any external API depend
 Run the extraction script:
 
 ```bash
-python3 ~/.claude/skills/granola/extract.py --days <N>
+python3 ~/.claude/skills/granola/scripts/extract.py --days <N>
 ```
 
 Options:

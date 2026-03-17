@@ -7,31 +7,17 @@ description: Create and manage a CHANGELOG.md file following the Keep a Changelo
 
 Maintain `CHANGELOG.md` following [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/).
 
-## Format
+## File Map
 
-```markdown
-# Changelog
+| File | What it contains | When to read |
+|------|-----------------|--------------|
+| `references/format-example.md` | Full markdown template + comparison link format | When creating a new changelog or cutting a release |
+| `references/commit-categories.md` | Heuristics table for mapping commits to change types | When categorizing commits |
+| `assets/changelog-template.md` | Starter CHANGELOG.md for new projects | When no CHANGELOG.md exists |
+| `gotchas.md` | Common failure patterns | When something goes wrong |
 
-All notable changes to this project will be documented in this file.
+## Rules
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-- New feature description
-
-## [1.2.0] - 2026-02-22
-
-### Fixed
-- Bug description
-
-[Unreleased]: https://github.com/owner/repo/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/owner/repo/compare/v1.1.0...v1.2.0
-```
-
-**Rules:**
 - `[Unreleased]` section always at the top
 - Versions in descending order (`## [X.Y.Z] - YYYY-MM-DD`)
 - Six change types: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`
@@ -47,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 cat CHANGELOG.md 2>/dev/null || echo "NO_CHANGELOG"
 ```
 
-If no CHANGELOG.md exists, create one with the header and an empty `[Unreleased]` section.
+If no CHANGELOG.md exists, create one using `assets/changelog-template.md`.
 
 ### Step 2 — Get recent commits
 
@@ -65,21 +51,7 @@ git log --oneline --no-merges -30
 
 ### Step 3 — Categorize commits
 
-Map each commit to the appropriate change type. Use these heuristics:
-
-| Commit clues | Category |
-|---|---|
-| `feat:`, `add`, `new`, `implement` | Added |
-| `refactor`, `update`, `change`, `improve`, `rename` | Changed |
-| `deprecate` | Deprecated |
-| `remove`, `delete`, `drop` | Removed |
-| `fix`, `bug`, `patch`, `correct` | Fixed |
-| `security`, `vuln`, `CVE`, `auth` | Security |
-
-Group related commits into single meaningful entries. Write entries for humans — describe the impact, not the implementation.
-
-**Good:** `- Added CSV export for user reports`
-**Bad:** `- feat: add csv_export method to UserReportController`
+Read `references/commit-categories.md` for the heuristics table. Group related commits into single meaningful entries.
 
 ### Step 4 — Update the file
 
@@ -92,11 +64,7 @@ When the user says "release X.Y.Z" or "cut version X.Y.Z":
 
 1. Rename `## [Unreleased]` → `## [X.Y.Z] - YYYY-MM-DD` (today's date)
 2. Add a new empty `## [Unreleased]` above it
-3. Update the version comparison links at the bottom:
-   ```markdown
-   [Unreleased]: https://github.com/owner/repo/compare/vX.Y.Z...HEAD
-   [X.Y.Z]: https://github.com/owner/repo/compare/vY.Y.Y...vX.Y.Z
-   ```
+3. Update version comparison links — see `references/format-example.md` for the format
 4. Ask the user to confirm the version number and remote URL if unknown
 
 ## Notes

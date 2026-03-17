@@ -22,6 +22,7 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 - [website-extractor](#website-extractor)
 - [marketing-copywriter](#marketing-copywriter)
 - [innovate](#innovate)
+- [nanobanana](#nanobanana)
 
 ### Development
 
@@ -36,6 +37,12 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 ### Security
 
 - [security-audit-skills](#security-audit-skills)
+
+### Contracts
+
+- [contract-manager](#contract-manager)
+
+> **Full file map:** See [SKILLS-MAP.md](SKILLS-MAP.md) for the complete directory structure of every skill.
 
 ---
 
@@ -114,6 +121,25 @@ Identifies the single most innovative, high-leverage addition to any plan or pro
 - Presents the idea with a clear argument for why it's the highest-leverage move available
 
 **Invoke:** `/innovate`
+
+---
+
+### nanobanana
+
+Generates professional photo-realistic images using structured JSON prompts and Google's Gemini image API.
+
+**Use when:**
+- Creating product shots, lifestyle images, ad creative, or hero images
+- Generating consistent brand imagery with full control over lighting, camera, and composition
+- Iterating on image concepts with structured prompt refinement
+
+**Key principles:**
+- Transforms plain descriptions into structured JSON prompts (scene, camera, lighting, style)
+- Camera details and specific lighting setups produce dramatically better results than vague adjectives
+- Iterates on one axis at a time — never changes everything at once
+- Uses `gemini-2.5-flash-image` for speed, `gemini-3-pro-image-preview` for text and maximum quality
+
+**Invoke:** `/nanobanana`
 
 ---
 
@@ -217,6 +243,42 @@ Performs security audits of your Claude Code configuration — skills, plugins, 
 - Checks for hooks with broad access
 
 **Invoke:** `/security-audit-skills`
+
+---
+
+## Contracts
+
+### contract-manager
+
+Multi-agent contract management — creates, reviews, and edits contracts using three specialized Claude subagents that independently analyze, cross-review, and debate disagreements.
+
+**Use when:**
+- Creating a new contract (NDA, consulting/freelance engagement, or general)
+- Reviewing an existing contract for risks, clarity, and business viability
+- Editing an existing contract with specific changes
+
+**Key principles:**
+- Three independent Claude agents (The Shield, The Plain Speaker, The Deal Maker) work in parallel
+- Cross-review with AGREE/ELEVATE/CHALLENGE protocol for conflict resolution
+- Checklist verification against required clauses by contract type
+- Produces professional `.docx` output
+
+**Invoke:** `/contract-manager`
+
+---
+
+## Skill Folder Structure
+
+Every skill follows a consistent structure. See [SKILLS-MAP.md](SKILLS-MAP.md) for the full directory listing.
+
+```
+skill-name/
+  SKILL.md              # When to use, core instructions, file map
+  gotchas.md            # Failure patterns — update when things go wrong
+  references/           # Detailed examples, checklists (read on demand)
+  assets/               # Templates, starter files, reusable formats
+  scripts/              # Executable scripts
+```
 
 ---
 
