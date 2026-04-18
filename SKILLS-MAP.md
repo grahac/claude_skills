@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 11 skills across 4 categories.
+Quick reference for where everything lives. 13 skills across 5 categories.
 
 ## Skill Directory Convention
 
@@ -66,6 +66,16 @@ nanobanana/
   scripts/nanobanana_generate.py  # Image generation script (requires GEMINI_API_KEY)
 ```
 
+### appstore-images `/appstore-images`
+App Store preview generator — iPhone, iPad, Mac with device mockups, gradients, and headline text.
+```
+appstore-images/
+  SKILL.md
+  fonts/                          # 7 bundled font presets (Montserrat, Oswald, Bebas, Anton, Archivo, MonaSans, Fredoka)
+  scripts/appstore_preview.py     # Generates a single preview from a screenshot + flags
+  scripts/requirements.txt        # Pillow
+```
+
 ## Development
 
 ### elixir-simplifier `/elixir-simplifier`
@@ -122,6 +132,17 @@ security-audit-skills/
   references/security-criteria.md # Check criteria by severity
   assets/report-template.md       # Audit report output format
   assets/ignore-entry-template.md # Format for ignore list entries
+```
+
+## Strategy
+
+### indispensable-need `/indispensable-need`
+Multi-agent JTBD analysis to find a product's indispensable need — the high-stakes job with no good substitute.
+```
+indispensable-need/
+  SKILL.md
+  gotchas.md
+  references/jtbd-framework.md     # Jobs to Be Done framework, dimensions, examples
 ```
 
 ## Contracts

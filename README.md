@@ -23,6 +23,11 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 - [marketing-copywriter](#marketing-copywriter)
 - [innovate](#innovate)
 - [nanobanana](#nanobanana)
+- [appstore-images](#appstore-images)
+
+### Strategy
+
+- [indispensable-need](#indispensable-need)
 
 ### Development
 
@@ -140,6 +145,44 @@ Generates professional photo-realistic images using structured JSON prompts and 
 - Uses `gemini-2.5-flash-image` for speed, `gemini-3-pro-image-preview` for text and maximum quality
 
 **Invoke:** `/nanobanana`
+
+---
+
+### appstore-images
+
+Generates polished App Store preview screens for iPhone, iPad, and Mac — composites screenshots onto colored backgrounds with realistic device mockups (dynamic island, side buttons, MacBook chrome) and bold headline typography.
+
+**Use when:**
+- Preparing App Store / Mac App Store listing assets
+- Creating marketing screenshots with consistent device framing across a screen set
+- Generating multi-device sets (iPhone + iPad + Mac) from raw simulator captures
+
+**Key principles:**
+- Bundles 7 font presets (montserrat default, oswald, bebas, anton, archivo, monasans, fredoka) and 20+ background colors plus custom hex/gradient support
+- Renders realistic device frames matching Apple's required canvas sizes (1290×2796 iPhone, 2048×2732 iPad, 2880×1800 Mac)
+- Vary the headline per screen to tell a story across a set; keep gradient and font consistent
+
+**Invoke:** `/appstore-images`
+
+---
+
+## Strategy
+
+### indispensable-need
+
+Identifies a product's indispensable need — the high-stakes job-to-be-done that has no good substitute.
+
+**Use when:**
+- Stress-testing whether a product is irreplaceable or merely nice-to-have
+- Mapping competitive substitutes and where they fall short
+- Surfacing the functional, emotional, and social dimensions of why someone hires a product
+
+**Key principles:**
+- Multiple parallel agents probe functional, emotional, and social JTBD dimensions
+- Combines competitive research with deep codebase reading to ground claims in what the product actually does
+- Outputs a sharp statement of the indispensable need, not a feature list
+
+**Invoke:** `/indispensable-need`
 
 ---
 
