@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 13 skills across 5 categories.
+Quick reference for where everything lives. 18 skills across 6 categories.
 
 ## Skill Directory Convention
 
@@ -109,6 +109,30 @@ changelog/
   assets/changelog-template.md    # Starter CHANGELOG.md for new projects
 ```
 
+### pull-main `/pull-main`
+Bring a feature branch up to date with origin/main and push it. Never writes to main; stops on conflict.
+```
+pull-main/
+  SKILL.md
+  gotchas.md
+```
+
+### pr-recap `/pr-recap`
+Non-technical product-person summary of merged PRs and direct commits since a cutoff PR or date.
+```
+pr-recap/
+  SKILL.md
+  gotchas.md
+```
+
+### elixir-deps-check `/elixir-deps-check`
+Audit Elixir mix.exs and mix.lock against hex.pm. Summarizes what changed per dep and recommends mix.exs vs mix.lock updates.
+```
+elixir-deps-check/
+  SKILL.md
+  gotchas.md
+```
+
 ## Productivity
 
 ### granola-scoop `/granola-scoop`
@@ -118,6 +142,23 @@ granola-scoop/
   SKILL.md
   gotchas.md
   scripts/extract.py              # Extraction script (reads Granola cache)
+```
+
+### suggest-skills `/suggest-skills`
+Mine recent Claude Code transcripts to surface candidate skills/plugins worth building. Spots repeated tasks, correction loops, and cross-project workflows.
+```
+suggest-skills/
+  SKILL.md
+  gotchas.md
+  scripts/analyze_transcripts.py  # Aggregates ~/.claude/projects/*/*.jsonl into a markdown report
+```
+
+### plugin-doctor `/plugin-doctor`
+Diagnose and fix Claude Code plugin/marketplace install problems. Walks the add → update → install → reload flow and resolves the common name/slug confusions.
+```
+plugin-doctor/
+  SKILL.md
+  gotchas.md
 ```
 
 ## Security
