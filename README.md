@@ -277,7 +277,7 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 ### voice-extractor
 
-One-time extraction of your personal email writing voice from your last 50 sent emails. Saves a reusable voiceprint to `~/.claude/voiceprints/email.md`.
+One-time extraction of your personal email writing voice from your last 50 sent emails. Saves a reusable voiceprint to `~/Documents/voiceprints/email.md`.
 
 **Use when:**
 - Setting up a personal voice profile for the first time
@@ -296,7 +296,7 @@ One-time extraction of your personal email writing voice from your last 50 sent 
 
 ### email-voice
 
-Applies your saved voiceprint to every email or short-form draft automatically. Reads `~/.claude/voiceprints/email.md` and enforces every rule in it.
+Applies your saved voiceprint to every email or short-form draft automatically. Reads `~/Documents/voiceprints/email.md` and enforces every rule in it.
 
 **Use when:**
 - Drafting any email, follow-up, intro, check-in, nudge, or decline
@@ -309,7 +309,7 @@ Applies your saved voiceprint to every email or short-form draft automatically. 
 - If no profile exists, prompts the user to run `/voice-extractor` — no generic fallback
 - Never mentions the voice profile in the draft itself
 
-**Setup:** Run `/voice-extractor` once, or copy `assets/email_template.md` to `~/.claude/voiceprints/email.md` and fill it in manually.
+**Setup:** Run `/voice-extractor` once, or copy `assets/email_template.md` to `~/Documents/voiceprints/email.md` and fill it in manually.
 
 **Invoke:** `/email-voice`
 

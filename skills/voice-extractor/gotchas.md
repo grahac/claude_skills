@@ -16,7 +16,7 @@ Don't assert a pattern unless it appears in at least 3 of the 50 emails. One-off
 If the user emails in more than one language, run analysis per-language and produce per-language mode rules. A single profile across languages will be inconsistent.
 
 ## Overwriting existing profile silently
-If `~/.claude/voiceprints/email.md` already exists, ask before overwriting. Offer to save as `email_[date].md` instead so the user keeps the previous version.
+If `~/Documents/voiceprints/email.md` already exists, ask before overwriting. Offer to save as `email_[date].md` instead so the user keeps the previous version.
 
 ## Calibration step skipped
 Don't save the profile until at least two consecutive calibration samples come back GOOD. Skipping calibration produces a profile that "looks right" on paper but generates wrong-feeling drafts.

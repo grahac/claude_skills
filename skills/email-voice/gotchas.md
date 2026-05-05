@@ -1,7 +1,7 @@
 # Email Voice — Gotchas
 
 ## No profile yet
-If `~/.claude/voiceprints/email.md` does not exist, do NOT fall back to a generic voice. Tell the user to run `/voice-extractor` once and stop. A generic-voice fallback is worse than nothing — it teaches the user to ignore the skill.
+If neither `~/Documents/voiceprints/email.md` (primary) nor `~/.claude/voiceprints/email.md` (legacy) exists, do NOT fall back to a generic voice. Tell the user to run `/voice-extractor` once and stop. A generic-voice fallback is worse than nothing — it teaches the user to ignore the skill.
 
 ## Reproducing the signature block
 The voice profile may include the user's typical sign-off, but most mail clients append an auto-signature. Never reproduce a signature block in the draft body — produces double signatures.

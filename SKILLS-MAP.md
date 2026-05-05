@@ -178,7 +178,7 @@ security-audit-skills/
 ## Writing
 
 ### voice-extractor `/voice-extractor`
-One-time extraction of the user's email writing voice from their last 50 sent emails. Saves a reusable voiceprint to `~/.claude/voiceprints/email.md` for the email-voice skill to apply automatically.
+One-time extraction of the user's email writing voice from their last 50 sent emails. Saves a reusable voiceprint to `~/Documents/voiceprints/email.md` for the email-voice skill to apply automatically.
 ```
 voice-extractor/
   SKILL.md
@@ -186,7 +186,7 @@ voice-extractor/
 ```
 
 ### email-voice `/email-voice`
-Apply the user's saved voiceprint when drafting any email or short-form message. Reads `~/.claude/voiceprints/email.md` and enforces every rule in it (LLM-ism ban list, anti-performative rules, mode-specific patterns).
+Apply the user's saved voiceprint when drafting any email or short-form message. Reads `~/Documents/voiceprints/email.md` and enforces every rule in it (LLM-ism ban list, anti-performative rules, mode-specific patterns).
 ```
 email-voice/
   SKILL.md

@@ -4,7 +4,7 @@
   This is a blank template. Run /voice-extractor to generate this automatically from
   your sent email, or fill it in manually using your own examples.
   
-  Save the completed file to ~/.claude/voiceprints/email.md.
+  Save the completed file to ~/Documents/voiceprints/email.md.
   The email-voice skill will pick it up automatically.
 -->
 

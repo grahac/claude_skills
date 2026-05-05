@@ -4,14 +4,15 @@ description: >
   Apply the user's personal email voice when drafting any email or short-form written
   content on their behalf. Use whenever drafting emails, follow-ups, intros, check-ins,
   nudges, declines, or any outbound message. Reads the user's voice profile from
-  ~/.claude/voiceprints/email.md and applies every rule in it.
+  ~/Documents/voiceprints/email.md (falls back to ~/.claude/voiceprints/email.md for
+  legacy installs) and applies every rule in it.
 ---
 
 # Email Voice
 
 When asked to draft any email or short-form written content:
 
-1. Read the voice profile at `~/.claude/voiceprints/email.md`.
+1. Read the voice profile. Try `~/Documents/voiceprints/email.md` first; if not present, fall back to `~/.claude/voiceprints/email.md` (the legacy location). Use whichever exists.
 
 2. Apply every rule in that file to the draft:
    - Section 1 (ban list): hard filter on every word and phrase listed
@@ -22,7 +23,7 @@ When asked to draft any email or short-form written content:
 
 3. Do not mention that you are applying a voice profile. Just produce the draft.
 
-4. If `~/.claude/voiceprints/email.md` does not exist:
+4. If neither path has a voiceprint:
    - Tell the user: "No voice profile found. Run /voice-extractor once to build yours — takes about 15 minutes."
    - Do not attempt to draft in a generic voice as a fallback.
 

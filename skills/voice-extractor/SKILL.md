@@ -13,7 +13,7 @@ description: >
 
 Pulls the user's last 50 sent emails, analyzes them for genuine voice patterns, walks
 through a human review pass, runs calibration samples, and saves the result to
-`~/.claude/voiceprints/email.md`. The email-voice skill reads that file automatically on
+`~/Documents/voiceprints/email.md`. The email-voice skill reads that file automatically on
 every future email draft.
 
 ---
@@ -148,21 +148,21 @@ back GOOD.
 ## Step 6 — Save
 
 **The output is a plain markdown file, not a skill.** Write the voiceprint content directly
-to `~/.claude/voiceprints/email.md` using the Write tool. Do NOT package the output as a
+to `~/Documents/voiceprints/email.md` using the Write tool. Do NOT package the output as a
 Claude Code skill, Cowork skill, plugin, or any folder/wrapper structure. No frontmatter,
 no `SKILL.md` name, no surrounding directory like `voice-name/`. The voiceprint is plain
 markdown read by the existing `email-voice` skill — wrapping it in a skill shell breaks
 that contract.
 
-Save the final profile to `~/.claude/voiceprints/email.md`.
+Save the final profile to `~/Documents/voiceprints/email.md`.
 
-If `~/.claude/voiceprints/` does not exist, create it (`mkdir -p ~/.claude/voiceprints`).
+If `~/Documents/voiceprints/` does not exist, create it (`mkdir -p ~/Documents/voiceprints`).
 If `email.md` already exists, ask the user before overwriting: "A voiceprint already exists.
 Overwrite it, or save as `email_[date].md`?"
 
 After saving, tell the user:
 
-> "Saved to ~/.claude/voiceprints/email.md. The email-voice skill will apply it automatically
+> "Saved to ~/Documents/voiceprints/email.md. The email-voice skill will apply it automatically
 > on every email draft. To update it, edit the file directly or run /voice-extractor again."
 
 ---
