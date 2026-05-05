@@ -13,6 +13,7 @@ and this project uses date-based releases.
 - New `Writing` skills category in README and SKILLS-MAP
 
 ### Changed
+- `voice-extractor` Step 6 hardened with explicit anti-pattern guard — output must be a plain markdown file at `~/.claude/voiceprints/email.md`, never packaged as a Cowork/Claude Code skill folder. Prevents agents from generating `voice-name/SKILL.md` wrappers instead of the expected file.
 - `hyperslide` upgraded with two-font pairing (display + body), slide entry animations with staggered children, gradient mesh backgrounds, 15px minimum body text, and WCAG AA contrast guidance
 - `hyperslide` example updated to demonstrate all new design patterns
 

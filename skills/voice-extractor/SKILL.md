@@ -147,11 +147,18 @@ back GOOD.
 
 ## Step 6 — Save
 
+**The output is a plain markdown file, not a skill.** Write the voiceprint content directly
+to `~/.claude/voiceprints/email.md` using the Write tool. Do NOT package the output as a
+Claude Code skill, Cowork skill, plugin, or any folder/wrapper structure. No frontmatter,
+no `SKILL.md` name, no surrounding directory like `voice-name/`. The voiceprint is plain
+markdown read by the existing `email-voice` skill — wrapping it in a skill shell breaks
+that contract.
+
 Save the final profile to `~/.claude/voiceprints/email.md`.
 
-If `~/.claude/voiceprints/` does not exist, create it. If `email.md` already exists, ask the
-user before overwriting: "A voiceprint already exists. Overwrite it, or save as
-`email_[date].md`?"
+If `~/.claude/voiceprints/` does not exist, create it (`mkdir -p ~/.claude/voiceprints`).
+If `email.md` already exists, ask the user before overwriting: "A voiceprint already exists.
+Overwrite it, or save as `email_[date].md`?"
 
 After saving, tell the user:
 
