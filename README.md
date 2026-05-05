@@ -39,6 +39,11 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 
 - [granola-scoop](#granola-scoop)
 
+### Writing
+
+- [voice-extractor](#voice-extractor)
+- [email-voice](#email-voice)
+
 ### Security
 
 - [security-audit-skills](#security-audit-skills)
@@ -265,6 +270,48 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 **Output:** Markdown files saved to `~/.granola-scoop/output/` with meeting metadata, your notes, and AI summaries.
 
 **Invoke:** `/granola-scoop`
+
+---
+
+## Writing
+
+### voice-extractor
+
+One-time extraction of your personal email writing voice from your last 50 sent emails. Saves a reusable voiceprint to `~/.claude/voiceprints/email.md`.
+
+**Use when:**
+- Setting up a personal voice profile for the first time
+- Refreshing your profile after writing has drifted ("rerun voice extraction")
+
+**Key principles:**
+- Detects your email connector (Gmail MCP, google-mcp, or Microsoft 365)
+- Pulls 75 sent emails, filters to a clean 50, strips quoted replies and signatures
+- Analyzes 8 voice dimensions and only asserts a pattern when it appears in ≥3 emails
+- Asks up front about Claude-drafted emails so AI patterns don't feed back into the profile
+- Walks through human review and calibration samples before saving
+
+**Invoke:** `/voice-extractor`
+
+---
+
+### email-voice
+
+Applies your saved voiceprint to every email or short-form draft automatically. Reads `~/.claude/voiceprints/email.md` and enforces every rule in it.
+
+**Use when:**
+- Drafting any email, follow-up, intro, check-in, nudge, or decline
+- Any short-form outbound message where voice matters
+
+**Key principles:**
+- Hard ban list filter on AI-isms ("delve", "leverage", "I hope this finds you well", em-dashes for elaboration, triadic lists)
+- Anti-performative rules prevent caricaturing the user's tone
+- Mode-specific patterns (intro reply, decline, nudge, etc.) override general rules
+- If no profile exists, prompts the user to run `/voice-extractor` — no generic fallback
+- Never mentions the voice profile in the draft itself
+
+**Setup:** Run `/voice-extractor` once, or copy `assets/email_template.md` to `~/.claude/voiceprints/email.md` and fill it in manually.
+
+**Invoke:** `/email-voice`
 
 ---
 

@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 18 skills across 6 categories.
+Quick reference for where everything lives. 20 skills across 7 categories.
 
 ## Skill Directory Convention
 
@@ -173,6 +173,25 @@ security-audit-skills/
   references/security-criteria.md # Check criteria by severity
   assets/report-template.md       # Audit report output format
   assets/ignore-entry-template.md # Format for ignore list entries
+```
+
+## Writing
+
+### voice-extractor `/voice-extractor`
+One-time extraction of the user's email writing voice from their last 50 sent emails. Saves a reusable voiceprint to `~/.claude/voiceprints/email.md` for the email-voice skill to apply automatically.
+```
+voice-extractor/
+  SKILL.md
+  gotchas.md
+```
+
+### email-voice `/email-voice`
+Apply the user's saved voiceprint when drafting any email or short-form message. Reads `~/.claude/voiceprints/email.md` and enforces every rule in it (LLM-ism ban list, anti-performative rules, mode-specific patterns).
+```
+email-voice/
+  SKILL.md
+  gotchas.md
+  assets/email_template.md         # Blank voiceprint template for manual fill-in
 ```
 
 ## Strategy

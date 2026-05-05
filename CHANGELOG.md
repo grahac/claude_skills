@@ -7,6 +7,11 @@ and this project uses date-based releases.
 
 ## [Unreleased]
 
+### Added
+- `voice-extractor` skill — one-time extraction of personal email writing voice from the last 50 sent emails (Gmail / google-mcp / Microsoft 365), with human review and calibration passes before saving the voiceprint to `~/.claude/voiceprints/email.md`
+- `email-voice` skill — applies the saved voiceprint to every email draft, enforcing the LLM-ism ban list, anti-performative rules, and mode-specific patterns; prompts to run `/voice-extractor` if no voiceprint exists
+- New `Writing` skills category in README and SKILLS-MAP
+
 ### Changed
 - `hyperslide` upgraded with two-font pairing (display + body), slide entry animations with staggered children, gradient mesh backgrounds, 15px minimum body text, and WCAG AA contrast guidance
 - `hyperslide` example updated to demonstrate all new design patterns
