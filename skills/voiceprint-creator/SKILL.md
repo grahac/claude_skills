@@ -1,20 +1,23 @@
 ---
-name: voice-extractor
+name: voiceprint-creator
 description: >
   Extract the user's personal email writing voice from their last 50 sent emails and
-  save it as a reusable voice profile. Use when the user says "extract my voice",
-  "build my voice profile", "analyze my email tone", "make me sound like me", "capture
-  my writing style", or any variation of creating a personal voice profile from their
-  actual sent email. Runs once; the output file is then used automatically by the
-  email-voice skill on every future draft.
+  package it as an installable Claude skill called "myvoiceprint". Use when the user says
+  "extract my voice", "build my voiceprint", "analyze my email tone", "make me sound like
+  me", "create my voiceprint skill", or any variation of capturing their writing style as
+  a reusable skill. Runs once; the output is a single .skill file the user installs on
+  claude.ai, Claude Code, or Cowork.
 ---
 
-# Voice Extractor
+# Voiceprint Creator
 
 Pulls the user's last 50 sent emails, analyzes them for genuine voice patterns, walks
-through a human review pass, runs calibration samples, and saves the result to
-`~/Documents/voiceprints/email.md`. The email-voice skill reads that file automatically on
-every future email draft.
+through a human review pass, runs calibration samples, and packages the result as an
+installable skill called `myvoiceprint`. The user installs that skill once; from then on,
+Claude applies their voice to every email draft.
+
+The output is a `.skill` file — a packaged, single-file skill that works on every Claude
+environment (claude.ai, Claude Code, Cowork).
 
 ---
 
@@ -67,9 +70,9 @@ example from the corpus. Classify each as VOICE, EMAIL_CONVENTION, or BORDERLINE
 
 ---
 
-## Step 3 — Draft the voice profile
+## Step 3 — Draft the voiceprint content
 
-Produce a draft `email.md` (the voiceprint) using this structure. Order matters — rules listed first
+Produce a draft voiceprint using this structure. Order matters — rules listed first
 carry more weight.
 
 ```markdown
@@ -112,7 +115,7 @@ decline.]
 Two-pass review: LLM-ism pass then length pass. Default: write less.]
 ```
 
-Show the draft in full. Do not save yet.
+Show the draft in full. Do not package yet.
 
 ---
 
@@ -145,25 +148,90 @@ back GOOD.
 
 ---
 
-## Step 6 — Save
+## Step 6 — Package as the `myvoiceprint` skill
 
-**The output is a plain markdown file, not a skill.** Write the voiceprint content directly
-to `~/Documents/voiceprints/email.md` using the Write tool. Do NOT package the output as a
-Claude Code skill, Cowork skill, plugin, or any folder/wrapper structure. No frontmatter,
-no `SKILL.md` name, no surrounding directory like `voice-name/`. The voiceprint is plain
-markdown read by the existing `email-voice` skill — wrapping it in a skill shell breaks
-that contract.
+The output is an installable `.skill` file the user can drop into claude.ai, Claude Code,
+or Cowork. Use the `skill-creator` skill's scripts when available; fall back to writing a
+raw `SKILL.md` file when not.
 
-Save the final profile to `~/Documents/voiceprints/email.md`.
+### 6a — Build the personalized SKILL.md content
 
-If `~/Documents/voiceprints/` does not exist, create it (`mkdir -p ~/Documents/voiceprints`).
-If `email.md` already exists, ask the user before overwriting: "A voiceprint already exists.
-Overwrite it, or save as `email_[date].md`?"
+Assemble the full SKILL.md text the `myvoiceprint` skill needs. Structure:
 
-After saving, tell the user:
+```markdown
+---
+name: myvoiceprint
+description: >
+  Apply [Name]'s personal email writing voice to every email or short-form message draft.
+  Use whenever drafting any email, reply, follow-up, intro response, check-in, decline,
+  or short-form outbound message on [Name]'s behalf. Enforces [Name]'s LLM-ism ban list,
+  anti-performative rules, and mode-specific patterns.
+---
 
-> "Saved to ~/Documents/voiceprints/email.md. The email-voice skill will apply it automatically
-> on every email draft. To update it, edit the file directly or run /voice-extractor again."
+# [Name]'s Voiceprint
+
+When asked to draft any email or short-form written content on [Name]'s behalf:
+
+1. Apply every rule in the voiceprint below.
+2. Do not mention that you are applying a voiceprint. Just produce the draft.
+3. If a mode-specific rule conflicts with a general rule, the mode-specific rule wins.
+
+---
+
+## Voiceprint
+
+[Full voiceprint content from Step 3, after Step 4 review and Step 5 calibration.
+Sections 1 through 5, exactly as agreed with the user.]
+```
+
+### 6b — Try skill-creator (preferred path)
+
+Check whether `skill-creator` is installed. Common locations:
+- `~/.claude/skills/skill-creator/`
+- `~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/`
+
+If present, use its scripts:
+
+```bash
+# Scaffold the skill folder
+<skill-creator-path>/scripts/init_skill.py myvoiceprint --path ~/Documents/
+
+# Overwrite the generated SKILL.md with the personalized content from 6a
+# (use the Write tool)
+
+# Package the skill folder into a distributable .skill file
+<skill-creator-path>/scripts/package_skill.py ~/Documents/myvoiceprint
+```
+
+The result is `~/Documents/myvoiceprint.skill`.
+
+### 6c — Fall back to raw SKILL.md (if skill-creator missing)
+
+If skill-creator is not installed, do this instead:
+
+```bash
+mkdir -p ~/Documents/myvoiceprint
+```
+
+Write the personalized SKILL.md content (from 6a) to `~/Documents/myvoiceprint/SKILL.md`.
+No `.skill` package. Tell the user they can install skill-creator later to package it,
+or manually upload the SKILL.md depending on their environment.
+
+### 6d — Tell the user
+
+Once the output is written, give the user concrete install instructions:
+
+> "Done. Your voiceprint is packaged at:
+>
+> - `~/Documents/myvoiceprint.skill` (if skill-creator was available)
+> - or `~/Documents/myvoiceprint/SKILL.md` (raw file fallback)
+>
+> Install:
+> - **claude.ai**: upload the .skill file (or SKILL.md content) via skill settings
+> - **Claude Code**: drop the folder into `~/.claude/skills/myvoiceprint/`
+> - **Cowork**: drop the folder into your Cowork skills directory
+>
+> To update your voice later, rerun /voiceprint-creator or edit the SKILL.md directly."
 
 ---
 

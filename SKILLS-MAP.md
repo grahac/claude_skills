@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 20 skills across 7 categories.
+Quick reference for where everything lives. 19 skills across 7 categories.
 
 ## Skill Directory Convention
 
@@ -177,21 +177,12 @@ security-audit-skills/
 
 ## Writing
 
-### voice-extractor `/voice-extractor`
-One-time extraction of the user's email writing voice from their last 50 sent emails. Saves a reusable voiceprint to `~/Documents/voiceprints/email.md` for the email-voice skill to apply automatically.
+### voiceprint-creator `/voiceprint-creator`
+One-time extraction of the user's email writing voice from their last 50 sent emails, packaged as an installable Claude skill called `myvoiceprint`. Uses `skill-creator` to produce a `.skill` file at `~/Documents/myvoiceprint.skill` (falls back to a raw `~/Documents/myvoiceprint/SKILL.md` if skill-creator isn't installed). User installs the resulting skill on claude.ai, Claude Code, or Cowork.
 ```
-voice-extractor/
+voiceprint-creator/
   SKILL.md
   gotchas.md
-```
-
-### email-voice `/email-voice`
-Apply the user's saved voiceprint when drafting any email or short-form message. Reads `~/Documents/voiceprints/email.md` and enforces every rule in it (LLM-ism ban list, anti-performative rules, mode-specific patterns).
-```
-email-voice/
-  SKILL.md
-  gotchas.md
-  assets/email_template.md         # Blank voiceprint template for manual fill-in
 ```
 
 ## Strategy
