@@ -276,7 +276,7 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 ### voiceprint-creator
 
-Extracts your personal writing voice for a specific medium (email, LinkedIn, or longform content) and writes it as a single `.md` skill file you can install on claude.ai, Claude Code, or Cowork. Run once per medium; install the file and Claude drafts in your voice.
+Creates a voiceprint capturing your personal writing voice for a specific medium (email, LinkedIn, or longform content) and writes it as a single `.md` skill file you can install on claude.ai, Claude Code, or Cowork. Run once per medium; install the file and Claude drafts in your voice.
 
 **Use when:**
 - Setting up a voiceprint for the first time

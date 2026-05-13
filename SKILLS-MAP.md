@@ -178,7 +178,7 @@ security-audit-skills/
 ## Writing
 
 ### voiceprint-creator `/voiceprint-creator`
-One-time extraction of the user's email writing voice from their last 50 sent emails, packaged as an installable Claude skill called `myvoiceprint`. Uses `skill-creator` to produce a `.skill` file at `~/Documents/myvoiceprint.skill` (falls back to a raw `~/Documents/myvoiceprint/SKILL.md` if skill-creator isn't installed). User installs the resulting skill on claude.ai, Claude Code, or Cowork.
+Creates a voiceprint capturing the user's personal writing voice for a chosen medium (email, LinkedIn, or longform content). Writes a plain `.md` skill file to `~/Documents/voiceprints/<medium>.md` (e.g., `email.md`, `linkedin.md`, `content.md`). Email runs support multiple accounts/MCPs (e.g., personal + work) merged into one voiceprint. User installs the resulting file on claude.ai, Claude Code, or Cowork.
 ```
 voiceprint-creator/
   SKILL.md

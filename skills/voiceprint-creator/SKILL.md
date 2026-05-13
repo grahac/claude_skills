@@ -1,11 +1,12 @@
 ---
 name: voiceprint-creator
 description: >
-  Extract the user's personal writing voice for a specific medium (email, LinkedIn, or
-  longform content) and write it as a single `.md` skill file in
-  `~/Documents/voiceprints/`. Use when the user says "extract my voice", "build my
-  voiceprint", "make me sound like me", "create my voiceprint", or any variation of
-  capturing their writing style. Asks which medium up front; runs once per medium.
+  Create a voiceprint capturing the user's personal writing voice for a specific
+  medium (email, LinkedIn, or longform content) and write it as a single `.md` skill
+  file in `~/Documents/voiceprints/`. Use when the user says "create my voiceprint",
+  "build my voiceprint", "make me sound like me", "extract my voice", or any
+  variation of capturing their writing style. Asks which medium up front; runs once
+  per medium.
 ---
 
 # Voiceprint Creator
