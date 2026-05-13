@@ -276,24 +276,28 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 ### voiceprint-creator
 
-One-time extraction of your personal email writing voice from your last 50 sent emails, packaged as an installable Claude skill named `myvoiceprint`. Install the resulting skill once on claude.ai, Claude Code, or Cowork; from then on Claude drafts every email in your voice.
+Extracts your personal writing voice for a specific medium (email, LinkedIn, or longform content) and writes it as a single `.md` skill file you can install on claude.ai, Claude Code, or Cowork. Run once per medium; install the file and Claude drafts in your voice.
 
 **Use when:**
-- Setting up a personal voiceprint for the first time
-- Rebuilding the skill after your writing voice has drifted
+- Setting up a voiceprint for the first time
+- Adding a new medium (already have email, want LinkedIn or longform)
+- Rebuilding after your writing voice has drifted
 
 **Key principles:**
-- Detects your email connector (Gmail MCP, google-mcp, or Microsoft 365)
-- Pulls 75 sent emails, filters to a clean 50, strips quoted replies and signatures
-- Analyzes 8 voice dimensions and only asserts a pattern when it appears in ≥3 emails
-- Asks up front about Claude-drafted emails so AI patterns don't feed back into the voiceprint
-- Walks through human review and calibration samples before packaging
-- Uses the [skill-creator](https://github.com/anthropics/skills) skill's scripts to package the result; falls back to a raw `SKILL.md` if skill-creator isn't installed
+- Asks which medium up front (email / LinkedIn / content); each has its own corpus source
+- **Email** — pulls from any connected email MCP (Gmail, Outlook/M365, Fastmail, ProtonMail, etc.). Supports MULTIPLE accounts in one run (e.g., personal + work under separate MCPs) and merges into one voiceprint with per-account signature guidance
+- **LinkedIn** — parses your LinkedIn data export (Settings → Data privacy → Get a copy of your data)
+- **Content** — scrapes longform pieces from a URL you provide (blog index, Substack archive)
+- Corpus pull runs in a fresh-context subagent so large mailboxes don't overflow context
+- Preserves minimalist single-line sign-offs (`--firstname`, `-C`) while stripping multi-line contact blocks
+- Analyzes 8 voice dimensions; asserts a pattern only when it appears in ≥3 corpus pieces
+- Distinguishes universal voice patterns from account-specific ones (sigs, CTAs, formality) in multi-account runs
+- Walks through human review (WRONG / OVERSTATED / MISSING / NEEDS_NUANCE) and calibration samples (GOOD / CLOSE / OFF) before writing
 
-**Output:** `~/Documents/myvoiceprint.skill` (or `~/Documents/myvoiceprint/SKILL.md` as fallback). Install on whichever Claude environments you use:
-- **claude.ai**: upload via skill settings
-- **Claude Code**: drop the folder into `~/.claude/skills/myvoiceprint/`
-- **Cowork**: drop the folder into your Cowork skills directory
+**Output:** `~/Documents/voiceprints/<medium>.md` — plain Markdown skill file (e.g., `email.md`, `linkedin.md`, `content.md`). Install:
+- **Claude Code**: copy to `~/.claude/skills/myvoiceprint_<medium>/SKILL.md`
+- **claude.ai**: paste contents into a new skill via skill settings
+- **Cowork**: drop into your Cowork skills directory
 
 **Invoke:** `/voiceprint-creator`
 
