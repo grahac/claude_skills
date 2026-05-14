@@ -1,5 +1,5 @@
 ---
-name: voiceprints
+name: voiceprint
 description: >
   Apply the user's personal writing voice when drafting any email, LinkedIn post,
   or longform content on their behalf. Reads voice rules from
@@ -9,7 +9,7 @@ description: >
   user has to ask for.
 ---
 
-# Voiceprints
+# Voiceprint
 
 When drafting any user-authored content (email, LinkedIn post, longform piece, short
 reply, etc.), apply the user's voiceprint for that medium.
@@ -29,7 +29,18 @@ reply, etc.), apply the user's voiceprint for that medium.
    general rules. The file contains the user's full voice spec (ban list, voice
    patterns, format-specific modes, adaptation rules).
 
-4. **Don't mention the voiceprint** — just produce the draft in the user's voice.
+4. **If Section 6 (Voice Exemplars) is present:** read those verbatim samples before
+   writing. They are the ground truth for what this voice actually sounds like — use
+   them as calibration, not the rules alone.
+
+5. **If sentence metrics are present (Section 3):** use the burstiness score and
+   typical range as targets. After drafting, do a quick rhythm scan — if the draft
+   consistently falls outside the typical range, revise before delivering.
+
+6. **If Section 7 (Sample Transformations) is present:** compare your draft against
+   the "Your voice" column. If it reads more like the "Generic" column, revise.
+
+7. **Don't mention the voiceprint** — just produce the draft in the user's voice.
 
 ## If the voiceprint file is missing
 
@@ -50,5 +61,6 @@ Warn the user it looks like a stub, then proceed with whatever rules are present
 
 ## Updating a voiceprint
 
-Tell the user they can edit `~/Documents/voiceprints/<medium>.md` directly, or
-rerun `/voiceprint-creator` to regenerate.
+Tell the user they can edit `~/Documents/voiceprints/<medium>.md` directly, run
+`/voiceprint-refine` to surgically update specific sections, or rerun
+`/voiceprint-creator` to regenerate from a fresh corpus.

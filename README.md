@@ -42,7 +42,8 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 ### Writing
 
 - [voiceprint-creator](#voiceprint-creator)
-- [voiceprints](#voiceprints)
+- [voiceprint](#voiceprint)
+- [voiceprint-refine](#voiceprint-refine)
 
 ### Security
 
@@ -295,13 +296,13 @@ Creates a voiceprint capturing your personal writing voice for a specific medium
 - Distinguishes universal voice patterns from account-specific ones (sigs, CTAs, formality) in multi-account runs
 - Walks through human review (WRONG / OVERSTATED / MISSING / NEEDS_NUANCE) and calibration samples (GOOD / CLOSE / OFF) before writing
 
-**Output:** `~/Documents/voiceprints/<medium>.md` — plain Markdown rules file (e.g., `email.md`, `linkedin.md`, `content.md`). The companion `voiceprints` skill reads it automatically when you draft content. No separate install per medium.
+**Output:** `~/Documents/voiceprints/<medium>.md` — plain Markdown rules file (e.g., `email.md`, `linkedin.md`, `content.md`). The companion `voiceprint` skill reads it automatically when you draft content. No separate install per medium.
 
 **Invoke:** `/voiceprint-creator`
 
 ---
 
-### voiceprints
+### voiceprint
 
 Runtime companion to `voiceprint-creator`. Applies your personal writing voice whenever you draft email, LinkedIn posts, or longform content — reads the voice rules from `~/Documents/voiceprints/<medium>.md` and applies them automatically. Lean (~30 lines) so it doesn't bloat context when loaded.
 
@@ -315,7 +316,28 @@ Runtime companion to `voiceprint-creator`. Applies your personal writing voice w
 - If the voiceprint is missing, points you to `/voiceprint-creator` and proceeds with default Claude voice (doesn't block the draft)
 - Stays small so it costs almost nothing when auto-loaded during drafting
 
-**Invoke:** auto-loads on any drafting task (or `/voiceprints` to force-load)
+**Invoke:** auto-loads on any drafting task (or `/voiceprint` to force-load)
+
+---
+
+### voiceprint-refine
+
+Surgically update an existing voiceprint without re-running the full creator. Use when something feels off after drafting in practice — a phrase that slipped through, a tone that's slightly wrong, an exemplar that could be better.
+
+**Use when:**
+- A draft used a phrase that should have been banned
+- A voice pattern was overclaimed and needs softening
+- You want to add or swap a voice exemplar
+- The formality level needs adjusting
+
+**What it does:**
+- Asks what to refine (no upfront summary dump)
+- Gets specifics, confirms the plan before touching the file
+- Makes surgical edits — adds to sections, never silently replaces
+- Validates the change with a targeted test draft before finishing
+- Handles multiple changes in one session
+
+**Invoke:** `/voiceprint-refine`
 
 ---
 

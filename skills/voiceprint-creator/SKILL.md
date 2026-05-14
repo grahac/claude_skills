@@ -191,6 +191,23 @@ VOICE, MEDIUM_CONVENTION, or BORDERLINE.
 8. **LLM-ism check** — flag patterns that look AI-generated (triadic lists, em-dash
    clarifications, "I hope this finds you well", delve, leverage). Exclude those
    pieces from the voice signal.
+9. **Sentence metrics** — calculate from the full corpus:
+   - Average sentence length (words per sentence across all pieces)
+   - Sentence length variance (standard deviation of sentence lengths)
+   - Burstiness score: variance ÷ mean (>1.0 = highly varied rhythm; <0.5 = uniform)
+   - Typical range: 10th–90th percentile sentence length
+   - Average paragraph length (sentences per paragraph)
+   These are quantitative targets for Claude to hit when drafting, not qualitative descriptions.
+
+**Exemplar selection.** After analysis, choose 5–6 corpus pieces to embed verbatim in
+the output file as voice exemplars. Categorize them:
+- **Short-form** (2–3 samples, under ~75 words each): natural rhythm across different registers
+- **Medium-form** (2 samples): explanation or narrative showing depth
+- **Opinionated** (1 sample): the piece with the strongest, most distinct voice
+
+If a piece is over 100 words, extract the most distinctive passage — enough context to
+stand alone. Use raw text verbatim; do not clean up grammar or phrasing. Authenticity
+matters more than polish.
 
 Medium-specific lenses to add on top:
 - **email** — greeting/sign-off forms, decline patterns, reply vs. new thread cues
@@ -213,10 +230,11 @@ Produce a draft using the structure below. Order matters — rules listed first 
 more weight. Show the draft in full; don't write the file yet.
 
 The output is RULES TEXT ONLY — no SKILL.md frontmatter, no application logic
-header. The `voiceprints` runtime skill provides the application logic and reads
+header. The `voiceprint` runtime skill provides the application logic and reads
 this file as raw rules.
 
 ```markdown
+<!-- voiceprint-version: 1.0.0 -->
 # [Name]'s <Medium> Voiceprint
 
 ## 1. LLM-ism ban list (HARD)
@@ -244,8 +262,18 @@ reaches for by default.]
 Don't caricature casual tone.]
 
 ## 3. Core voice patterns
+
 [Sentence structure, vocabulary, formatting — prescriptive, with right/wrong examples
 from the actual corpus.]
+
+### Sentence metrics
+- Average sentence length: X words
+- Burstiness score: X.X (>1.0 = varied rhythm; <0.5 = uniform)
+- Typical range: X–X words per sentence
+- Average paragraph: X sentences
+
+[Use these as calibration targets when drafting. If a draft consistently falls outside
+the typical range, revise before delivering.]
 
 ## 4. Format-specific modes
 [Per-mode patterns. Email: intro reply / follow-up / nudge / decline / quick answer.
@@ -259,6 +287,39 @@ account-specific details into universal rules.]
 ## 5. Adaptation rules
 [Pre-draft checklist: audience, desired next action. Two-pass review: LLM-ism pass,
 then length pass. Default: write less.]
+
+## 6. Voice exemplars (verbatim)
+
+These are actual pieces from the corpus. They ARE the voice — read them before
+delivering any draft. Every pattern rule above should be visible here.
+
+### Short-form
+[2–3 verbatim samples under ~75 words each. Label each with context in parens:
+(email reply, intro thread), (LinkedIn comment), (quick follow-up), etc.]
+
+### Medium-form
+[2 verbatim samples showing explanation or narrative depth. Label context.]
+
+### Opinionated
+[1 verbatim sample with the strongest, most distinct voice. Label context.]
+
+## 7. Sample transformations
+
+The gap between generic AI writing and this voice. Use these as a final calibration
+check before delivering any draft — if your draft reads more like "Generic" than
+"Your voice", revise it.
+
+### 1. Generic opener → your voice
+**Generic:** "[A typical AI opener for this medium — hollow, formal, hedged]"
+**Your voice:** "[The same opening rewritten using corpus patterns]"
+
+### 2. Formal explanation → your voice
+**Generic:** "[A formal, structured AI explanation with hedges and connector words]"
+**Your voice:** "[Rewritten — same content, actual voice]"
+
+### 3. Short-form / social → your voice
+**Generic:** "[A generic AI social post or short reply — polished, lifeless]"
+**Your voice:** "[Rewritten — rhythm, vocabulary, and conviction from the corpus]"
 ```
 
 ---
@@ -298,19 +359,20 @@ back GOOD.
 ## Step 6 — Write the voiceprint file
 
 Write the final voiceprint to `~/Documents/voiceprints/<medium>.md`. The file
-contains ONLY the voice rules (Sections 1–5 plus the title header) — no
-frontmatter, no application-instructions block. The runtime `voiceprints` skill
-reads this file when the user drafts content and applies the rules.
+contains Sections 1–7 plus the title header and the `<!-- voiceprint-version: 1.0.0 -->`
+comment at the top — no SKILL.md frontmatter, no application-instructions block.
+The runtime `voiceprint` skill reads this file when the user drafts content and
+applies the rules.
 
 Tell the user:
 
 > "Done. Your voiceprint is at `~/Documents/voiceprints/<medium>.md`.
 >
-> The `voiceprints` skill picks it up automatically next time you draft <medium>.
-> If you don't have `voiceprints` installed yet, install it from
+> The `voiceprint` skill picks it up automatically next time you draft <medium>.
+> If you don't have `voiceprint` installed yet, install it from
 > `github.com/grahac/claude_skills` (it's the runtime companion to this creator).
 >
-> To update, rerun /voiceprint-creator for this medium, or edit the file directly.
+> To refine specific sections later, run /voiceprint-refine.
 > To add another voice (email / LinkedIn / content), rerun and pick a different
 > medium."
 

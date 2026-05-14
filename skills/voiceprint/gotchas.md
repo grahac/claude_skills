@@ -1,4 +1,4 @@
-# Voiceprints — Gotchas
+# Voiceprint — Gotchas
 
 ## Wrong medium auto-detected
 If the user's prompt is ambiguous ("draft a quick message to..."), don't guess. Ask which medium they want — email, LinkedIn, or longform — before reading the file. A LinkedIn voiceprint applied to a customer email will read wrong.

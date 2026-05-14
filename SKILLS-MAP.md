@@ -178,17 +178,25 @@ security-audit-skills/
 ## Writing
 
 ### voiceprint-creator `/voiceprint-creator`
-Creates a voiceprint capturing the user's personal writing voice for a chosen medium (email, LinkedIn, or longform content). Writes a plain rules-text `.md` file to `~/Documents/voiceprints/<medium>.md` (e.g., `email.md`, `linkedin.md`, `content.md`). Email runs support multiple accounts/MCPs (e.g., personal + work) merged into one voiceprint. Paired with the `voiceprints` runtime skill that reads + applies these files automatically.
+Creates a voiceprint capturing the user's personal writing voice for a chosen medium (email, LinkedIn, or longform content). Writes a plain rules-text `.md` file to `~/Documents/voiceprints/<medium>.md` (e.g., `email.md`, `linkedin.md`, `content.md`). Email runs support multiple accounts/MCPs (e.g., personal + work) merged into one voiceprint. Paired with the `voiceprint` runtime skill that reads + applies these files automatically.
 ```
 voiceprint-creator/
   SKILL.md
   gotchas.md
 ```
 
-### voiceprints `/voiceprints`
+### voiceprint `/voiceprint`
 Runtime companion to voiceprint-creator. Auto-applies the user's writing voice when drafting any email, LinkedIn post, or longform content. Reads `~/Documents/voiceprints/<medium>.md` and applies the rules. Lean (~30 lines) so it doesn't bloat context when loaded. If a voiceprint is missing, points the user to /voiceprint-creator and proceeds with default Claude voice.
 ```
-voiceprints/
+voiceprint/
+  SKILL.md
+  gotchas.md
+```
+
+### voiceprint-refine `/voiceprint-refine`
+Surgically update an existing voiceprint without re-running the full creator. Asks what to refine, gets specifics, confirms before editing, makes surgical changes, validates with a test draft. Handles forbidden pattern additions, formality shifts, exemplar swaps, and transformation fixes.
+```
+voiceprint-refine/
   SKILL.md
   gotchas.md
 ```
