@@ -42,6 +42,7 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 ### Writing
 
 - [voiceprint-creator](#voiceprint-creator)
+- [voiceprints](#voiceprints)
 
 ### Security
 
@@ -294,12 +295,27 @@ Creates a voiceprint capturing your personal writing voice for a specific medium
 - Distinguishes universal voice patterns from account-specific ones (sigs, CTAs, formality) in multi-account runs
 - Walks through human review (WRONG / OVERSTATED / MISSING / NEEDS_NUANCE) and calibration samples (GOOD / CLOSE / OFF) before writing
 
-**Output:** `~/Documents/voiceprints/<medium>.md` — plain Markdown skill file (e.g., `email.md`, `linkedin.md`, `content.md`). Install:
-- **Claude Code**: copy to `~/.claude/skills/myvoiceprint_<medium>/SKILL.md`
-- **claude.ai**: paste contents into a new skill via skill settings
-- **Cowork**: drop into your Cowork skills directory
+**Output:** `~/Documents/voiceprints/<medium>.md` — plain Markdown rules file (e.g., `email.md`, `linkedin.md`, `content.md`). The companion `voiceprints` skill reads it automatically when you draft content. No separate install per medium.
 
 **Invoke:** `/voiceprint-creator`
+
+---
+
+### voiceprints
+
+Runtime companion to `voiceprint-creator`. Applies your personal writing voice whenever you draft email, LinkedIn posts, or longform content — reads the voice rules from `~/Documents/voiceprints/<medium>.md` and applies them automatically. Lean (~30 lines) so it doesn't bloat context when loaded.
+
+**Use when:**
+- Drafting any email, LinkedIn post, or longform content on your behalf (auto-applies)
+- Already created a voiceprint via `/voiceprint-creator` and want it to apply
+
+**Key principles:**
+- Auto-detects medium from context (email / LinkedIn / longform); asks if ambiguous
+- Reads `~/Documents/voiceprints/<medium>.md` at runtime — edits to the file take effect immediately, no reinstall
+- If the voiceprint is missing, points you to `/voiceprint-creator` and proceeds with default Claude voice (doesn't block the draft)
+- Stays small so it costs almost nothing when auto-loaded during drafting
+
+**Invoke:** auto-loads on any drafting task (or `/voiceprints` to force-load)
 
 ---
 

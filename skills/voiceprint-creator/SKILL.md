@@ -212,24 +212,12 @@ voiceprint draft instead of asserting them as universal rules.
 Produce a draft using the structure below. Order matters — rules listed first carry
 more weight. Show the draft in full; don't write the file yet.
 
+The output is RULES TEXT ONLY — no SKILL.md frontmatter, no application logic
+header. The `voiceprints` runtime skill provides the application logic and reads
+this file as raw rules.
+
 ```markdown
----
-name: myvoiceprint_<medium>
-description: >
-  Apply [Name]'s personal <medium> writing voice to any [email | LinkedIn post |
-  longform content] draft. Use whenever drafting <medium-specific scope> on [Name]'s
-  behalf. Enforces [Name]'s LLM-ism ban list, anti-performative rules, and
-  mode-specific patterns.
----
-
 # [Name]'s <Medium> Voiceprint
-
-When drafting [medium-specific content] on [Name]'s behalf:
-1. Apply every rule below.
-2. Don't mention the voiceprint — just produce the draft.
-3. Mode-specific rules win over general rules.
-
----
 
 ## 1. LLM-ism ban list (HARD)
 
@@ -309,21 +297,22 @@ back GOOD.
 
 ## Step 6 — Write the voiceprint file
 
-Write the final voiceprint to `~/Documents/voiceprints/<medium>.md`. Include the
-frontmatter from Step 3.
+Write the final voiceprint to `~/Documents/voiceprints/<medium>.md`. The file
+contains ONLY the voice rules (Sections 1–5 plus the title header) — no
+frontmatter, no application-instructions block. The runtime `voiceprints` skill
+reads this file when the user drafts content and applies the rules.
 
 Tell the user:
 
 > "Done. Your voiceprint is at `~/Documents/voiceprints/<medium>.md`.
 >
-> Install:
-> - **Claude Code**: copy to `~/.claude/skills/myvoiceprint_<medium>/SKILL.md`
-> - **claude.ai**: paste the contents into a new skill via skill settings
-> - **Cowork**: drop into your Cowork skills directory
+> The `voiceprints` skill picks it up automatically next time you draft <medium>.
+> If you don't have `voiceprints` installed yet, install it from
+> `github.com/grahac/claude_skills` (it's the runtime companion to this creator).
 >
-> To update, rerun /voiceprint-creator and pick this medium again, or edit the file
-> directly. To add another voice (email / LinkedIn / content), rerun and pick a
-> different medium."
+> To update, rerun /voiceprint-creator for this medium, or edit the file directly.
+> To add another voice (email / LinkedIn / content), rerun and pick a different
+> medium."
 
 ---
 
