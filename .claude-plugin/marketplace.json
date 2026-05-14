@@ -1,0 +1,12 @@
+{
+  "name": "grahac-claude-plugins",
+  "owner": {
+    "name": "Charlie Graham"
+  },
+  "plugins": [
+    {
+      "name": "voiceprint",
+      "source": "./plugins/voiceprint"
+    }
+  ]
+}
