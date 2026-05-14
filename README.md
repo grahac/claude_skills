@@ -41,9 +41,7 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 
 ### Writing
 
-- [voiceprint-creator](#voiceprint-creator)
-- [voiceprint](#voiceprint)
-- [voiceprint-refine](#voiceprint-refine)
+- [voiceprint plugin](#voiceprint-plugin)
 
 ### Security
 
@@ -276,68 +274,29 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 ## Writing
 
-### voiceprint-creator
+### voiceprint plugin
 
-Creates a voiceprint capturing your personal writing voice for a specific medium (email, LinkedIn, or longform content) and writes it as a single `.md` skill file you can install on claude.ai, Claude Code, or Cowork. Run once per medium; install the file and Claude drafts in your voice.
+Clone your writing voice. Analyzes your real sent emails, LinkedIn posts, or longform content — then applies it automatically whenever Claude drafts in your name.
 
-**Use when:**
-- Setting up a voiceprint for the first time
-- Adding a new medium (already have email, want LinkedIn or longform)
-- Rebuilding after your writing voice has drifted
+**Install:** `plugins/voiceprint/` in this repo — [direct link](https://github.com/grahac/claude_skills/tree/main/plugins/voiceprint)
 
-**Key principles:**
-- Asks which medium up front (email / LinkedIn / content); each has its own corpus source
-- **Email** — pulls from any connected email MCP (Gmail, Outlook/M365, Fastmail, ProtonMail, etc.). Supports MULTIPLE accounts in one run (e.g., personal + work under separate MCPs) and merges into one voiceprint with per-account signature guidance
-- **LinkedIn** — parses your LinkedIn data export (Settings → Data privacy → Get a copy of your data)
-- **Content** — scrapes longform pieces from a URL you provide (blog index, Substack archive)
-- Corpus pull runs in a fresh-context subagent so large mailboxes don't overflow context
-- Preserves minimalist single-line sign-offs (`--firstname`, `-C`) while stripping multi-line contact blocks
-- Analyzes 8 voice dimensions; asserts a pattern only when it appears in ≥3 corpus pieces
-- Distinguishes universal voice patterns from account-specific ones (sigs, CTAs, formality) in multi-account runs
-- Walks through human review (WRONG / OVERSTATED / MISSING / NEEDS_NUANCE) and calibration samples (GOOD / CLOSE / OFF) before writing
+**Commands:**
 
-**Output:** `~/Documents/voiceprints/<medium>.md` — plain Markdown rules file (e.g., `email.md`, `linkedin.md`, `content.md`). The companion `voiceprint` skill reads it automatically when you draft content. No separate install per medium.
+| Command | What it does |
+|---|---|
+| `/voiceprint create` | Build a new voiceprint from your real writing (email, LinkedIn, or longform) |
+| `/voiceprint refine` | Surgically update an existing voiceprint without rebuilding |
 
-**Invoke:** `/voiceprint-creator`
+The `voiceprint` skill auto-applies whenever Claude drafts content on your behalf.
 
----
-
-### voiceprint
-
-Runtime companion to `voiceprint-creator`. Applies your personal writing voice whenever you draft email, LinkedIn posts, or longform content — reads the voice rules from `~/Documents/voiceprints/<medium>.md` and applies them automatically. Lean (~30 lines) so it doesn't bloat context when loaded.
-
-**Use when:**
-- Drafting any email, LinkedIn post, or longform content on your behalf (auto-applies)
-- Already created a voiceprint via `/voiceprint-creator` and want it to apply
-
-**Key principles:**
-- Auto-detects medium from context (email / LinkedIn / longform); asks if ambiguous
-- Reads `~/Documents/voiceprints/<medium>.md` at runtime — edits to the file take effect immediately, no reinstall
-- If the voiceprint is missing, points you to `/voiceprint-creator` and proceeds with default Claude voice (doesn't block the draft)
-- Stays small so it costs almost nothing when auto-loaded during drafting
-
-**Invoke:** auto-loads on any drafting task (or `/voiceprint` to force-load)
-
----
-
-### voiceprint-refine
-
-Surgically update an existing voiceprint without re-running the full creator. Use when something feels off after drafting in practice — a phrase that slipped through, a tone that's slightly wrong, an exemplar that could be better.
-
-**Use when:**
-- A draft used a phrase that should have been banned
-- A voice pattern was overclaimed and needs softening
-- You want to add or swap a voice exemplar
-- The formality level needs adjusting
-
-**What it does:**
-- Asks what to refine (no upfront summary dump)
-- Gets specifics, confirms the plan before touching the file
-- Makes surgical edits — adds to sections, never silently replaces
-- Validates the change with a targeted test draft before finishing
-- Handles multiple changes in one session
-
-**Invoke:** `/voiceprint-refine`
+**Key features:**
+- Corpus-first: analyzes 50 real sent emails (not a questionnaire) — or LinkedIn export / blog URLs
+- Supports multiple email accounts merged into one voiceprint (personal + work)
+- Quantified sentence metrics (burstiness score, avg length, typical range) as calibration targets
+- Verbatim voice exemplars embedded in the output — ground truth over rules alone
+- Before/after sample transformations showing generic AI vs your voice
+- Versioned output files with `/voiceprint refine` for surgical updates
+- Output: `~/Documents/voiceprints/<medium>.md` (email / linkedin / content)
 
 ---
 

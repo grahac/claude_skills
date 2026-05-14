@@ -1,0 +1,9 @@
+{
+  "name": "voiceprint",
+  "version": "1.0.0",
+  "description": "Clone your writing voice. Analyzes your real sent emails, LinkedIn posts, or longform content to build a voiceprint — then applies it automatically whenever Claude drafts in your name.",
+  "author": {
+    "name": "Charlie Graham",
+    "url": "https://github.com/grahac"
+  }
+}
