@@ -19,7 +19,17 @@ Users discover gaps in practice — this workflow lets them fix them immediately
 
 Ask: "Which voiceprint do you want to refine — email, LinkedIn, or content?"
 
-Read `~/Documents/voiceprints/<medium>.md`.
+**Resolve `~` to an absolute path before any file op.** The `Read`, `Write`, and
+`Edit` tools do NOT expand `~`. Run a shell call once and cache as `VOICEPRINT_DIR`:
+
+- macOS / Linux / WSL: `echo "$HOME/Documents/voiceprints"`
+- Windows (PowerShell): `echo "$env:USERPROFILE\Documents\voiceprints"`
+- Windows (cmd): `echo %USERPROFILE%\Documents\voiceprints`
+
+Every later reference to `~/Documents/voiceprints/...` means `<VOICEPRINT_DIR>/...`.
+Never pass a literal `~` to a file tool, and never fall back to the workspace dir.
+
+Read `<VOICEPRINT_DIR>/<medium>.md`.
 
 If the file doesn't exist, tell the user:
 > "No voiceprint for `<medium>` yet. Run `/voiceprint-creator` to build one first."

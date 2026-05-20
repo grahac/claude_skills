@@ -23,7 +23,17 @@ reply, etc.), apply the user's voiceprint for that medium.
    - Short message (Slack, iMessage, DM) → use `email.md` as the closest match
    - If the medium is genuinely ambiguous, ask the user before drafting.
 
-2. **Read** `~/Documents/voiceprints/<medium>.md`.
+2. **Read the voiceprint file.** The `Read` tool does NOT expand `~`. Try in this
+   order — use the first one that exists:
+
+   a. **Canonical (Claude Code CLI):** resolve `$HOME` / `$env:USERPROFILE` via a
+      shell call, then read `<resolved>/Documents/voiceprints/<medium>.md`.
+   b. **Workspace fallback (Claude.ai sandbox):** read `voiceprints/<medium>.md`
+      relative to the mounted workspace. This is where `/voiceprint-creator`
+      writes when the canonical path is sandboxed.
+
+   If neither location has the file, tell the user it's not installed and point
+   them at `/voiceprint-creator`. Do NOT silently draft without a voiceprint.
 
 3. **Apply every rule** in that file to the draft. Mode-specific rules win over
    general rules. The file contains the user's full voice spec (ban list, voice

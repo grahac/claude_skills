@@ -278,7 +278,14 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 Clone your writing voice. Analyzes your real sent emails, LinkedIn posts, or longform content — then applies it automatically whenever Claude drafts in your name.
 
-**Install:** `plugins/voiceprint/` in this repo — [direct link](https://github.com/grahac/claude_skills/tree/main/plugins/voiceprint)
+**Install** (from inside Claude Code):
+
+```
+/plugin marketplace add grahac/claude_skills
+/plugin install voiceprint@grahac-claude-plugins
+```
+
+Source: [plugins/voiceprint/](https://github.com/grahac/claude_skills/tree/main/plugins/voiceprint)
 
 **Commands:**
 

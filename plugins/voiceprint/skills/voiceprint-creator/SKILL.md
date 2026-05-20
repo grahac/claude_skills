@@ -31,9 +31,22 @@ across files is intentional, since skills don't reliably reference each other.
 
 Ask: "Which voiceprint do you want to create — email, LinkedIn, or content (longform)?"
 
-Create `~/Documents/voiceprints/` if it doesn't exist.
+**Resolve the output directory to an absolute path before any file op.** The `Read`,
+`Write`, and `Edit` tools do NOT expand `~`. Run a shell call once and cache the
+result as `VOICEPRINT_DIR` for the rest of the run:
 
-If `~/Documents/voiceprints/<medium>.md` already exists, ask before overwriting. Offer
+- macOS / Linux / WSL: `echo "$HOME/Documents/voiceprints"`
+- Windows (PowerShell): `echo "$env:USERPROFILE\Documents\voiceprints"`
+- Windows (cmd): `echo %USERPROFILE%\Documents\voiceprints`
+
+Every later reference to `~/Documents/voiceprints/...` in this SKILL means
+`<VOICEPRINT_DIR>/...`. Never pass a literal `~` to a file tool, and never fall
+back to the current workspace directory — if path resolution fails, stop and ask
+the user for an absolute path.
+
+Create `<VOICEPRINT_DIR>` if it doesn't exist.
+
+If `<VOICEPRINT_DIR>/<medium>.md` already exists, ask before overwriting. Offer
 to save the new one as `<medium>_YYYY-MM-DD.md` so the previous version is preserved.
 
 ---
@@ -358,23 +371,37 @@ back GOOD.
 
 ## Step 6 — Write the voiceprint file
 
-Write the final voiceprint to `~/Documents/voiceprints/<medium>.md`. The file
-contains Sections 1–7 plus the title header and the `<!-- voiceprint-version: 1.0.0 -->`
-comment at the top — no SKILL.md frontmatter, no application-instructions block.
-The runtime `voiceprint` skill reads this file when the user drafts content and
-applies the rules.
+The file contains Sections 1–7 plus the title header and the
+`<!-- voiceprint-version: 1.0.0 -->` comment at the top — no SKILL.md frontmatter,
+no application-instructions block. The runtime `voiceprint` skill reads this file
+when the user drafts content and applies the rules.
 
-Tell the user:
+**Where to write.** Try the canonical location first; fall back to the workspace
+if the runtime is sandboxed (Claude.ai web/desktop confines `Write` and `Bash` to
+the mounted workspace, so writes to `C:\Users\...\Documents\...` or
+`/Users/.../Documents/...` will fail — Claude Code CLI with file permissions does
+not have this constraint).
 
-> "Done. Your voiceprint is at `~/Documents/voiceprints/<medium>.md`.
->
-> The `voiceprint` skill picks it up automatically next time you draft <medium>.
-> If you don't have `voiceprint` installed yet, install it from
-> `github.com/grahac/claude_skills` (it's the runtime companion to this creator).
->
-> To refine specific sections later, run /voiceprint-refine.
-> To add another voice (email / LinkedIn / content), rerun and pick a different
-> medium."
+1. **Attempt:** `Write` to `<VOICEPRINT_DIR>/<medium>.md` (the absolute path
+   resolved in Step 0 — never a literal `~`).
+2. **On success** (Claude Code CLI), tell the user:
+   > "Done. Your voiceprint is at `<VOICEPRINT_DIR>/<medium>.md`. The `voiceprint`
+   > skill picks it up automatically next time you draft <medium>.
+   >
+   > To refine specific sections later, run `/voiceprint-refine`.
+   > To add another voice (email / LinkedIn / content), rerun and pick a different
+   > medium."
+3. **On failure** (sandbox / permission error), write the file to the workspace as
+   `voiceprints/<medium>.md` instead. The runtime `voiceprint` skill checks the
+   workspace fallback, so this works with no further user action. Tell the user:
+
+   > "Done. This environment is sandboxed to the workspace, so your voiceprint is
+   > saved to `voiceprints/<medium>.md` in this project. The `voiceprint` skill
+   > finds it here automatically. Note: this install is scoped to this project —
+   > to use the same voiceprint in another project or in Claude Code CLI globally,
+   > rerun `/voiceprint-creator` there.
+   >
+   > To refine specific sections later, run `/voiceprint-refine`."
 
 ---
 
