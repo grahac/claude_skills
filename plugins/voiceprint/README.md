@@ -1,42 +1,61 @@
 # Voiceprint
 
-Clone your writing voice. Analyzes your real sent emails, LinkedIn posts, or longform
-content — then applies it automatically whenever Claude drafts in your name.
+Clone your writing voice as an installable Claude skill. Analyzes your real sent
+emails, LinkedIn posts, or longform content — then packages your voice as a skill
+that auto-applies whenever Claude drafts in your name.
 
 ## What it does
 
-**Creates a voiceprint from your actual writing** — not a questionnaire, not
+**Builds a voiceprint from your actual writing** — not a questionnaire, not
 self-reported preferences. Pulls 50 real sent emails (or LinkedIn export / blog URLs),
 runs analysis across 9 dimensions including quantified sentence metrics, selects
 verbatim corpus snippets as ground-truth exemplars, and builds a ban list of AI
 patterns that don't belong in your voice.
 
-**Applies it automatically** — the `voiceprint` skill reads your voiceprint file and
-applies every rule whenever Claude drafts email, posts, or content on your behalf. No
-manual invocation needed.
+**Packages it as an installable Claude skill** — one per medium (`myvoiceprint-email`,
+`myvoiceprint-linkedin`, `myvoiceprint-content`). The generated skill has its own
+description that triggers whenever Claude drafts in that medium on your behalf. No
+runtime intermediary, no manual invocation.
 
-**Lets you refine it over time** — when something feels off after a real draft, run
-`/voiceprint refine` to surgically fix it without rebuilding from scratch.
+**Refines surgically over time** — when something feels off after a real draft, rerun
+`/voiceprint` and pick refine mode to fix it without rebuilding from scratch.
 
-## Commands
+## Command
 
 | Command | What it does |
 |---|---|
-| `/voiceprint create` | Build a new voiceprint (email, LinkedIn, or longform) |
-| `/voiceprint refine` | Surgically update an existing voiceprint |
-
-The `voiceprint` skill auto-applies whenever Claude drafts content in your voice.
+| `/voiceprint` | Build a new voiceprint OR refine an existing one — asks which up front, then which medium |
 
 ## Output
 
-Each voiceprint is saved to `~/Documents/voiceprints/<medium>.md`:
-- `email.md` — sent email voice
-- `linkedin.md` — LinkedIn post voice
-- `content.md` — longform/blog voice
+The creator writes one of:
+- `~/Documents/myvoiceprint-<medium>.skill` — packaged single-file skill (when `skill-creator` is installed)
+- `~/Documents/myvoiceprint-<medium>/SKILL.md` — raw skill folder (fallback)
 
-The file contains 7 sections: LLM-ism ban list, anti-performative rules, core voice
-patterns with sentence metrics, format-specific modes, adaptation rules, verbatim voice
-exemplars, and before/after sample transformations.
+`<medium>` is one of `email`, `linkedin`, or `content`. Each is an independent
+installable skill that triggers on its own medium — install all three for a full
+multi-medium voice.
+
+The skill's body contains 7 sections: LLM-ism ban list, anti-performative rules,
+core voice patterns with sentence metrics, format-specific modes, adaptation rules,
+verbatim voice exemplars, and before/after sample transformations.
+
+## Install the generated skill
+
+After `/voiceprint` produces the output:
+
+- **Claude Code (CLI):** copy the folder to `~/.claude/skills/myvoiceprint-<medium>/`.
+  The skill auto-triggers next time you draft that medium on your behalf.
+- **claude.ai (web/desktop):** upload the `.skill` file via skill settings (or the
+  folder's `SKILL.md` if you got the fallback).
+- **Cowork:** drop the folder into your Cowork skills directory.
+
+## Refine an installed voiceprint
+
+Rerun `/voiceprint`, pick **refine** at the mode prompt, and pick the medium. The
+creator reads the installed skill at `~/.claude/skills/myvoiceprint-<medium>/SKILL.md`
+and walks you through surgical edits (add a ban, fix a tone, swap an exemplar). No
+corpus re-pull required.
 
 ## Supported sources
 
@@ -45,7 +64,14 @@ exemplars, and before/after sample transformations.
 - **LinkedIn** — posts from your LinkedIn data export
 - **Content** — longform pieces fetched from URLs you provide
 
-## Install
+## Install the plugin
 
 Add the plugin directory to your Claude Code project or install from:
 `https://github.com/grahac/claude_skills/tree/main/plugins/voiceprint`
+
+## Breaking change in v2.0.0
+
+v1.x wrote rules to `~/Documents/voiceprints/<medium>.md` and applied them via a
+runtime `voiceprint` skill. v2.0.0 packages each voiceprint as its own installable
+skill instead. If you used v1.x, rerun `/voiceprint` to generate a proper v2 skill —
+existing v1.x files are not auto-migrated.
