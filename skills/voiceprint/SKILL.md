@@ -1,5 +1,5 @@
 ---
-name: voiceprint-creator
+name: voiceprint
 description: >
   Create or refine a voiceprint capturing the user's personal writing voice for a
   specific medium (email, LinkedIn, or longform content), and package it as an
@@ -11,7 +11,7 @@ description: >
   and which medium up front.
 ---
 
-# Voiceprint Creator
+# Voiceprint
 
 Builds or refines a per-medium voiceprint and packages it as an installable Claude skill.
 

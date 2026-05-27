@@ -41,7 +41,7 @@ cp -r skills/elixir-simplifier ~/.claude/skills/
 
 ### Writing
 
-- [voiceprint plugin](#voiceprint-plugin)
+- [voiceprint](#voiceprint)
 
 ### Security
 
@@ -274,27 +274,21 @@ Extracts meeting notes from [Granola's](https://granola.ai) local cache — no A
 
 ## Writing
 
-### voiceprint plugin
+### voiceprint
 
-Clone your writing voice. Analyzes your real sent emails, LinkedIn posts, or longform content — then applies it automatically whenever Claude drafts in your name.
+Clone your writing voice as an installable Claude skill, one per medium (email, LinkedIn, longform content). Analyzes your real sent emails, LinkedIn posts, or longform content — then packages your voice as a skill that auto-applies whenever Claude drafts in your name.
 
-**Install** (from inside Claude Code):
+Source: [skills/voiceprint/](https://github.com/grahac/claude_skills/tree/main/skills/voiceprint)
 
-```
-/plugin marketplace add grahac/claude_skills
-/plugin install voiceprint@grahac-claude-plugins
-```
+**Install:**
 
-Source: [plugins/voiceprint/](https://github.com/grahac/claude_skills/tree/main/plugins/voiceprint)
+Copy `skills/voiceprint/` into `~/.claude/skills/voiceprint/`, then `/voiceprint` becomes available as a slash command.
 
-**Commands:**
+**Command:**
 
 | Command | What it does |
 |---|---|
-| `/voiceprint create` | Build a new voiceprint from your real writing (email, LinkedIn, or longform) |
-| `/voiceprint refine` | Surgically update an existing voiceprint without rebuilding |
-
-The `voiceprint` skill auto-applies whenever Claude drafts content on your behalf.
+| `/voiceprint` | Build a new voiceprint OR refine an existing one — asks create-or-refine and which medium up front |
 
 **Key features:**
 - Corpus-first: analyzes 50 real sent emails (not a questionnaire) — or LinkedIn export / blog URLs
@@ -302,8 +296,8 @@ The `voiceprint` skill auto-applies whenever Claude drafts content on your behal
 - Quantified sentence metrics (burstiness score, avg length, typical range) as calibration targets
 - Verbatim voice exemplars embedded in the output — ground truth over rules alone
 - Before/after sample transformations showing generic AI vs your voice
-- Versioned output files with `/voiceprint refine` for surgical updates
-- Output: `~/Documents/voiceprints/<medium>.md` (email / linkedin / content)
+- Output is an installable Claude skill (`myvoiceprint-<medium>`) — drops into `~/.claude/skills/myvoiceprint-<medium>/`, claude.ai, or Cowork
+- Refine mode for surgical updates to an installed voiceprint
 
 ---
 
