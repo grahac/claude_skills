@@ -296,7 +296,7 @@ Copy `skills/voiceprint/` into `~/.claude/skills/voiceprint/`, then `/voiceprint
 - Quantified sentence metrics (burstiness score, avg length, typical range) as calibration targets
 - Verbatim voice exemplars embedded in the output — ground truth over rules alone
 - Before/after sample transformations showing generic AI vs your voice
-- Output is an installable Claude skill (`myvoiceprint-<medium>`) — drops into `~/.claude/skills/myvoiceprint-<medium>/`, claude.ai, or Cowork
+- Output is an installable Claude skill (`myvoiceprint-<medium>`) written directly to `~/.claude/skills/myvoiceprint-<medium>/` — active the moment it's written, no copy step
 - Refine mode for surgical updates to an installed voiceprint
 
 ---

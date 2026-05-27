@@ -49,12 +49,11 @@ Ask: "Which medium — email, LinkedIn, or content (longform)?"
 - Windows (PowerShell): `echo "$env:USERPROFILE"` → `<HOME>`
 
 Then:
-- `OUTPUT_DIR = <HOME>/Documents` (where the packaged skill is written for the user to install)
-- `INSTALLED_PATH = <HOME>/.claude/skills/myvoiceprint-<medium>` (where the skill lands after the user installs it — the refine flow reads from here)
+- `INSTALLED_PATH = <HOME>/.claude/skills/myvoiceprint-<medium>` (where the generated skill is written — also where the refine flow reads from)
 
-Every later `~/Documents/...` in this SKILL means `<OUTPUT_DIR>/...`. Never pass a literal `~` to a file tool, and never fall back to the current workspace dir — if path resolution fails, stop and ask the user for an absolute path.
+The create flow writes the new skill directly to `INSTALLED_PATH`, so it's installed and active the moment the file lands. No separate install step, no `~/Documents/` intermediate. Never pass a literal `~` to a file tool — always use the resolved absolute path.
 
-If `create` mode and `<OUTPUT_DIR>/myvoiceprint-<medium>.skill` (or `<OUTPUT_DIR>/myvoiceprint-<medium>/`) already exists, ask before overwriting. Offer to save as `myvoiceprint-<medium>-YYYY-MM-DD` so the previous version is preserved.
+If `create` mode and `<INSTALLED_PATH>/SKILL.md` already exists, ask before overwriting. Offer to back up as `<INSTALLED_PATH>-YYYY-MM-DD/` so the previous version is preserved.
 
 ---
 
@@ -310,7 +309,7 @@ Apply fixes. Generate another round if needed. Stop when two consecutive samples
 
 ## Step 6 — Package as the `myvoiceprint-<medium>` skill
 
-The output is an installable skill the user drops into `~/.claude/skills/myvoiceprint-<medium>/` (Claude Code), uploads to claude.ai, or installs into Cowork. Use the `skill-creator` skill's scripts when available; fall back to writing a raw `SKILL.md` folder when not.
+Write the generated skill directly to its install location: `<INSTALLED_PATH>/SKILL.md`. The skill is active the moment the file lands — no copy step, no portable artifact intermediate. If the user later wants to share the skill with claude.ai or Cowork, they can read it from `<INSTALLED_PATH>` and upload/copy from there.
 
 ### 6a — Build the personalized SKILL.md content
 
@@ -348,56 +347,29 @@ When asked to draft any <medium> content on [Name]'s behalf:
 - **linkedin**: "Apply [Name]'s personal LinkedIn voice when drafting any LinkedIn post, comment, or DM on [Name]'s behalf. Use whenever drafting LinkedIn content as [Name]."
 - **content**: "Apply [Name]'s personal longform writing voice when drafting any blog post, essay, op-ed, longform article, or substantial written piece on [Name]'s behalf. Use whenever drafting longform content as [Name]."
 
-### 6b — Try skill-creator (preferred path)
+### 6b — Write the skill to its install path
 
-Check whether `skill-creator` is installed. Probe these common locations in order:
-- `<HOME>/.claude/skills/skill-creator/scripts/init_skill.py`
-- `<HOME>/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/init_skill.py`
-- Any path matching `<HOME>/.claude/**/skill-creator/scripts/init_skill.py`
-
-If found, capture `<SC_PATH>` as the directory containing `init_skill.py` and `package_skill.py`, then:
+Create the skill folder and write the SKILL.md:
 
 ```bash
-# Scaffold the skill folder
-python3 "<SC_PATH>/init_skill.py" myvoiceprint-<medium> --path "<OUTPUT_DIR>/"
+mkdir -p "<INSTALLED_PATH>"
 ```
 
-Overwrite the generated SKILL.md with the personalized content from 6a (use the Write tool, target `<OUTPUT_DIR>/myvoiceprint-<medium>/SKILL.md`).
+Use the Write tool to write the personalized SKILL.md content (from 6a) to `<INSTALLED_PATH>/SKILL.md`. That's it — the skill is now installed and will activate next time Claude drafts in that medium.
 
-```bash
-# Package the skill folder into a distributable .skill file
-python3 "<SC_PATH>/package_skill.py" "<OUTPUT_DIR>/myvoiceprint-<medium>"
-```
+### 6c — Tell the user
 
-The result is `<OUTPUT_DIR>/myvoiceprint-<medium>.skill`.
+Once the file is written, confirm:
 
-If `init_skill.py` or `package_skill.py` errors (e.g., missing dependencies, unexpected schema), fall through to 6c rather than blocking — the raw folder fallback is fully functional.
-
-### 6c — Fall back to raw SKILL.md (if skill-creator missing or errored)
-
-If skill-creator is not installed:
-
-```bash
-mkdir -p "<OUTPUT_DIR>/myvoiceprint-<medium>"
-```
-
-Write the personalized SKILL.md content (from 6a) to `<OUTPUT_DIR>/myvoiceprint-<medium>/SKILL.md`. No `.skill` package — just the folder.
-
-### 6d — Tell the user
-
-Once the output is written, give concrete install instructions tailored to which path landed:
-
-> "Done. Your voiceprint is packaged at:
+> "Done. Your voiceprint is installed at `~/.claude/skills/myvoiceprint-<medium>/SKILL.md`. It will auto-activate next time you draft <medium> on your behalf — no further install steps.
 >
-> - `<OUTPUT_DIR>/myvoiceprint-<medium>.skill` (if skill-creator was available)
-> - or `<OUTPUT_DIR>/myvoiceprint-<medium>/SKILL.md` (folder fallback)
->
-> Install:
-> - **Claude Code (CLI):** copy the folder to `~/.claude/skills/myvoiceprint-<medium>/`. The skill will auto-trigger next time you draft <medium> on your behalf.
-> - **claude.ai web/desktop:** upload the `.skill` file via skill settings (or the folder's SKILL.md if you got the fallback).
-> - **Cowork:** drop the folder into your Cowork skills directory.
+> To use this voiceprint in other Claude environments:
+> - **claude.ai web/desktop:** copy the SKILL.md contents and upload via skill settings.
+> - **Cowork:** copy the folder `~/.claude/skills/myvoiceprint-<medium>/` into your Cowork skills directory.
 >
 > To refine specific sections later (add bans, fix tone, swap an exemplar), rerun `/voiceprint` and pick refine mode. To build voiceprints for other media (email / LinkedIn / content), rerun and pick a different medium."
+
+Then nudge: "Run `/reload-plugins` to activate it in this session, or it'll be active automatically in your next session."
 
 ---
 

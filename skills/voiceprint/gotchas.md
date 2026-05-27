@@ -46,13 +46,13 @@ If the user writes in more than one language, run analysis per-language and prod
 Don't write the file until at least two consecutive calibration samples come back GOOD. Skipping calibration produces a voiceprint that "looks right" on paper but generates wrong-feeling drafts.
 
 ## Overwriting an existing voiceprint
-If `~/Documents/myvoiceprint-<medium>.skill` or `~/Documents/myvoiceprint-<medium>/` already exists, ask before overwriting. Offer to save the new one as `myvoiceprint-<medium>-YYYY-MM-DD` so the user keeps the previous version.
+If `~/.claude/skills/myvoiceprint-<medium>/SKILL.md` already exists, ask before overwriting. Offer to back up the existing folder as `~/.claude/skills/myvoiceprint-<medium>-YYYY-MM-DD/` so the user keeps the previous version. (That backup folder name won't auto-load as a competing skill since the suffix differs — intentional.)
 
 ## Wrong medium for the corpus
 Don't analyze LinkedIn posts and package as `myvoiceprint-email`, or vice versa — voice differs significantly across media (length, formality, formatting). The generated skill's `name:` and `description:` are medium-specific and must match the corpus source.
 
 ## Refine mode without an installed skill
-Refine mode reads `~/.claude/skills/myvoiceprint-<medium>/SKILL.md` directly. If the skill isn't installed there (user generated it but never copied it into `~/.claude/skills/`, or only installed it on claude.ai), refine has no source to edit. Tell the user to install first, or rerun in create mode.
+Refine mode reads `~/.claude/skills/myvoiceprint-<medium>/SKILL.md` directly. If the create flow never ran (or someone deleted the installed skill), refine has no source to edit. Tell the user to run `/voiceprint` in create mode first.
 
-## skill-creator scripts errored mid-run
-If `init_skill.py` or `package_skill.py` errors (missing deps, schema mismatch, permission issue), don't block the user — fall through to the raw `~/Documents/myvoiceprint-<medium>/SKILL.md` folder fallback. The folder is fully installable; only the single-file `.skill` package is lost.
+## Documents folder permission prompts
+The create flow writes directly to `~/.claude/skills/`, NOT `~/Documents/`. Earlier versions used `~/Documents/` as an intermediate "package and copy" location, which triggered Claude Code's Documents permission gate on every operation. Direct-to-install eliminates that. Don't reintroduce a Documents/ detour without a reason.
