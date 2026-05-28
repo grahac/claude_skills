@@ -177,25 +177,12 @@ security-audit-skills/
 
 ## Writing
 
-### voiceprint plugin — `/voiceprint create`, `/voiceprint refine`
-Clone your writing voice. Corpus-first approach: analyzes 50 real sent emails (or LinkedIn export / blog URLs) rather than a questionnaire. Produces a versioned voiceprint file with quantified sentence metrics, verbatim voice exemplars, and before/after sample transformations. The `voiceprint` skill auto-applies whenever Claude drafts on the user's behalf.
+### voiceprint `/voiceprint`
+Clone your writing voice as an installable Claude skill, one per medium. Corpus-first approach: analyzes 50 real sent emails (or LinkedIn export / blog URLs) rather than a questionnaire. Step 0 mode branch asks create-or-refine; create mode runs analysis + review + calibration, then packages the output as `myvoiceprint-<medium>` via skill-creator (with raw SKILL.md fallback). Refine mode surgically edits an already-installed `myvoiceprint-<medium>` skill.
 ```
-plugins/voiceprint/
-  .claude-plugin/
-    plugin.json
-  commands/
-    create.md
-    refine.md
-  skills/
-    voiceprint-creator/
-      SKILL.md
-      gotchas.md
-    voiceprint/
-      SKILL.md
-      gotchas.md
-    voiceprint-refine/
-      SKILL.md
-      gotchas.md
+voiceprint/
+  SKILL.md
+  gotchas.md
 ```
 
 ## Strategy

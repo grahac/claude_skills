@@ -46,7 +46,13 @@ If the user writes in more than one language, run analysis per-language and prod
 Don't write the file until at least two consecutive calibration samples come back GOOD. Skipping calibration produces a voiceprint that "looks right" on paper but generates wrong-feeling drafts.
 
 ## Overwriting an existing voiceprint
-If `~/Documents/voiceprints/<medium>.md` already exists, ask before overwriting. Offer to save the new one as `<medium>_YYYY-MM-DD.md` so the user keeps the previous version.
+Step 0c already handles this — when the inferred medium has an existing skill, the user is asked to **refine**, **replace**, or **build a different medium**. On `replace`, back up `~/.claude/skills/myvoiceprint-<medium>/` to `~/.claude/skills/myvoiceprint-<medium>-YYYY-MM-DD/` BEFORE writing the new SKILL.md. The dated backup folder won't auto-load as a competing skill (suffix differs — intentional). Don't silently overwrite; if Step 0c was bypassed for some reason, ask before writing.
 
 ## Wrong medium for the corpus
-Don't analyze LinkedIn posts and write to `email.md`, or vice versa — voice differs significantly across media (length, formality, formatting). Always confirm the medium matches the corpus source.
+Don't analyze LinkedIn posts and package as `myvoiceprint-email`, or vice versa — voice differs significantly across media (length, formality, formatting). The generated skill's `name:` and `description:` are medium-specific and must match the corpus source.
+
+## Refine mode without an installed skill
+Refine mode reads `~/.claude/skills/myvoiceprint-<medium>/SKILL.md` directly. If the create flow never ran (or someone deleted the installed skill), refine has no source to edit. Tell the user to run `/voiceprint` in create mode first.
+
+## Documents folder permission prompts
+The create flow writes directly to `~/.claude/skills/`, NOT `~/Documents/`. Earlier versions used `~/Documents/` as an intermediate "package and copy" location, which triggered Claude Code's Documents permission gate on every operation. Direct-to-install eliminates that. Don't reintroduce a Documents/ detour without a reason.
