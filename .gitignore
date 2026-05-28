@@ -1,0 +1,5 @@
+# Packaged .skill artifacts — distributed via GitHub Releases, not committed
+dist/
+
+# OS / editor junk
+.DS_Store
