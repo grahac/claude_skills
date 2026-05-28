@@ -28,32 +28,53 @@ Supported media:
 
 ---
 
-## Step 0 — Mode and medium
+## Step 0 — Determine intent
 
-### Step 0a — Ask mode
+Don't ask cold. Infer as much as possible from the user's invocation and what's already installed, then ask only when there's genuine ambiguity.
 
-Ask: "Are you creating a new voiceprint, or refining an existing one?"
+### Step 0a — Resolve `$HOME` and probe installed voiceprints
 
-- **create** → continue with Step 0b, then Step 1
-- **refine** → continue with Step 0b, then jump to the Refine flow (Steps R1–R6 below). Skip Steps 1–5.
+**Resolve `$HOME` to an absolute path before any file op.** The `Read`, `Write`, and `Edit` tools do NOT expand `~`. Run a shell call once and cache `<HOME>`:
 
-### Step 0b — Ask medium
+- macOS / Linux / WSL: `echo "$HOME"`
+- Windows (PowerShell): `echo "$env:USERPROFILE"`
 
-Ask: "Which medium — email, LinkedIn, or content (longform)?"
+Then list existing voiceprints:
 
-### Step 0c — Resolve paths
+```bash
+ls -d <HOME>/.claude/skills/myvoiceprint-*/ 2>/dev/null
+```
 
-**Resolve `$HOME` to an absolute path before any file op.** The `Read`, `Write`, and `Edit` tools do NOT expand `~`. Run a shell call once and cache:
+Record which media already have an installed skill (any of `email`, `linkedin`, `content`).
 
-- macOS / Linux / WSL: `echo "$HOME"` → `<HOME>`
-- Windows (PowerShell): `echo "$env:USERPROFILE"` → `<HOME>`
+`INSTALLED_PATH = <HOME>/.claude/skills/myvoiceprint-<medium>` — where the generated skill is written AND where refine reads from. Never pass a literal `~` to a file tool.
 
-Then:
-- `INSTALLED_PATH = <HOME>/.claude/skills/myvoiceprint-<medium>` (where the generated skill is written — also where the refine flow reads from)
+### Step 0b — Infer medium from the invocation
 
-The create flow writes the new skill directly to `INSTALLED_PATH`, so it's installed and active the moment the file lands. No separate install step, no `~/Documents/` intermediate. Never pass a literal `~` to a file tool — always use the resolved absolute path.
+Look at the user's invocation arguments and any conversation context. Pick the first that matches:
 
-If `create` mode and `<INSTALLED_PATH>/SKILL.md` already exists, ask before overwriting. Offer to back up as `<INSTALLED_PATH>-YYYY-MM-DD/` so the previous version is preserved.
+- **content** ← any URL is supplied (http/https), or "blog", "essay", "substack", "longform", "article", "newsletter", "post" (when not "LinkedIn post")
+- **email** ← "email", "sent mail", "Gmail", "Outlook", "inbox", "M365", "Microsoft 365", "Fastmail", "ProtonMail"
+- **linkedin** ← "LinkedIn", "Shares.csv", "LinkedIn post", "LinkedIn export"
+- **unknown** ← no signal
+
+### Step 0c — Decide mode and route
+
+Combine inferred medium with what's installed:
+
+| Inferred medium | Skill exists? | What to do |
+|---|---|---|
+| Known (e.g., `content`) | No | **Create mode**, that medium. Proceed silently to Step 1 — don't ask. Tell the user: "Creating a new `myvoiceprint-<medium>`." |
+| Known | Yes | Ask one question: "You already have a `myvoiceprint-<medium>` skill at `~/.claude/skills/myvoiceprint-<medium>/`. **Refine it**, **replace it from scratch**, or **build a different medium**?" Route by answer. |
+| Unknown | One or more exist | Ask: "You have voiceprints for [list]. **Refine one of those** (which?), or **create a new one** (email / LinkedIn / content)?" Route by answer. |
+| Unknown | None exist | Ask: "Which medium — email, LinkedIn, or content (longform)?" Then proceed in create mode. |
+
+Mode-to-step mapping:
+- **Create (medium)** → Step 1 (corpus pull for that medium)
+- **Refine (medium)** → Refine flow, Step R1 (loads `<INSTALLED_PATH>/SKILL.md`)
+- **Replace (medium)** → create mode; first back up the existing skill folder as `<INSTALLED_PATH>-YYYY-MM-DD/` so it's preserved, then proceed to Step 1
+
+If a URL was supplied in the invocation, carry it forward to Step 1c — don't re-ask for it.
 
 ---
 
@@ -375,7 +396,7 @@ Then nudge: "Run `/reload-plugins` to activate it in this session, or it'll be a
 
 ## Refine flow (Steps R1–R6) *(refine mode only)*
 
-Used when the user picked `refine` at Step 0a. Skips corpus pull, analysis, and calibration — operates on an already-installed `myvoiceprint-<medium>` skill.
+Used when Step 0c routes to Refine. Skips corpus pull, analysis, and calibration — operates on an already-installed `myvoiceprint-<medium>` skill.
 
 ### Step R1 — Load the installed skill
 

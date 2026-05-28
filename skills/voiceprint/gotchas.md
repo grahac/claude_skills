@@ -46,7 +46,7 @@ If the user writes in more than one language, run analysis per-language and prod
 Don't write the file until at least two consecutive calibration samples come back GOOD. Skipping calibration produces a voiceprint that "looks right" on paper but generates wrong-feeling drafts.
 
 ## Overwriting an existing voiceprint
-If `~/.claude/skills/myvoiceprint-<medium>/SKILL.md` already exists, ask before overwriting. Offer to back up the existing folder as `~/.claude/skills/myvoiceprint-<medium>-YYYY-MM-DD/` so the user keeps the previous version. (That backup folder name won't auto-load as a competing skill since the suffix differs — intentional.)
+Step 0c already handles this — when the inferred medium has an existing skill, the user is asked to **refine**, **replace**, or **build a different medium**. On `replace`, back up `~/.claude/skills/myvoiceprint-<medium>/` to `~/.claude/skills/myvoiceprint-<medium>-YYYY-MM-DD/` BEFORE writing the new SKILL.md. The dated backup folder won't auto-load as a competing skill (suffix differs — intentional). Don't silently overwrite; if Step 0c was bypassed for some reason, ask before writing.
 
 ## Wrong medium for the corpus
 Don't analyze LinkedIn posts and package as `myvoiceprint-email`, or vice versa — voice differs significantly across media (length, formality, formatting). The generated skill's `name:` and `description:` are medium-specific and must match the corpus source.
