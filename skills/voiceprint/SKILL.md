@@ -3,7 +3,8 @@ name: voiceprint
 description: >
   Create or refine a voiceprint capturing the user's personal writing voice for a
   specific medium (email, LinkedIn, or longform content), and package it as an
-  installable Claude skill named `myvoiceprint-<medium>`. The user installs that
+  installable Claude skill (one per medium: myvoiceprint-email, myvoiceprint-linkedin,
+  or myvoiceprint-content). The user installs that
   skill once; from then on, Claude applies their voice when drafting in that medium.
   Use when the user says "create my voiceprint", "build my voiceprint", "refine my
   voiceprint", "update my voiceprint", "make me sound like me", "extract my voice",
@@ -334,21 +335,23 @@ Write the generated skill directly to its install location: `<INSTALLED_PATH>/SK
 
 ### 6a — Build the personalized SKILL.md content
 
-Assemble the full SKILL.md text the generated skill needs. Structure:
+Assemble the full SKILL.md text the generated skill needs. Structure (example shown for `content`; substitute the actual medium and the user's name):
+
+**CRITICAL — no angle brackets anywhere in the file.** The skill validator rejects any `description:` containing `<...>` (it reads as an XML tag). Substitute every placeholder with concrete text before writing: real medium (`email`/`linkedin`/`content`), the user's actual name, the real list of intents. Never leave a literal `<medium>`, `<Medium>`, or `<...>` token in the output — not in the frontmatter, not in the body.
 
 ```markdown
 ---
-name: myvoiceprint-<medium>
+name: myvoiceprint-content
 description: >
-  Apply [Name]'s personal <medium> writing voice when drafting <medium-specific
-  list of intents> on [Name]'s behalf. Enforces [Name]'s LLM-ism ban list,
-  anti-performative rules, mode-specific patterns, and voice exemplars. Use
-  whenever drafting <medium>-style content as [Name].
+  Apply [Name]'s personal longform writing voice when drafting any blog post, essay,
+  op-ed, or substantial written piece on [Name]'s behalf. Enforces [Name]'s LLM-ism
+  ban list, anti-performative rules, mode-specific patterns, and voice exemplars. Use
+  whenever drafting longform content as [Name].
 ---
 
-# [Name]'s <Medium> Voiceprint
+# [Name]'s Content Voiceprint
 
-When asked to draft any <medium> content on [Name]'s behalf:
+When asked to draft any longform content on [Name]'s behalf:
 
 1. Apply every rule in the voiceprint below.
 2. Mode-specific rules win over general rules.
