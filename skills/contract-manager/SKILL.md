@@ -1,3 +1,13 @@
+---
+name: contract-manager
+description: >
+  Create, review, or edit contracts (NDAs, consulting/freelance engagement letters,
+  general agreements) using multiple specialized subagents that independently analyze,
+  cross-review, debate disagreements, verify required clauses, and produce professional
+  .docx output. Use when the user asks to draft, review, redline, or edit a contract or
+  legal agreement.
+---
+
 # Contract Manager
 
 Multi-agent contract management skill. Creates, reviews, and edits contracts using three specialized Claude subagents that independently analyze, cross-review, debate disagreements, verify required clauses, and produce professional `.docx` output.
