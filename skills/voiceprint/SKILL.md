@@ -19,7 +19,7 @@ Builds or refines a per-medium voiceprint and packages it as an installable Clau
 - **Create** — pull the user's real writing for a chosen medium, run 8-dimension analysis, a human review pass, calibration samples, and package the result as `myvoiceprint-<medium>`.
 - **Refine** — surgically update an already-installed `myvoiceprint-<medium>` skill (add bans, fix tone, swap an exemplar) without re-running the full corpus pull.
 
-The output is always an installable skill: `~/Documents/myvoiceprint-<medium>.skill` (via skill-creator's scripts when available) or `~/Documents/myvoiceprint-<medium>/SKILL.md` (raw folder fallback). The generated skill has its own frontmatter and self-triggers when the user drafts content in that medium — no runtime intermediary required.
+The generated skill is written directly to `~/.claude/skills/myvoiceprint-<medium>/SKILL.md`, so it's installed and active the moment it lands — no copy step, no `~/Documents/` intermediate. It carries its own frontmatter and self-triggers when the user drafts content in that medium — no runtime intermediary required.
 
 Supported media:
 - **email** — last 40–50 sent emails across one or more email MCPs (Gmail, Outlook/M365, Fastmail, ProtonMail, etc.). Supports MULTIPLE accounts in one run — useful when the user has personal + work mailboxes under separate MCPs and wants a single merged voiceprint.
