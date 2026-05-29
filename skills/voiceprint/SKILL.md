@@ -371,29 +371,41 @@ When asked to draft any longform content on [Name]'s behalf:
 - **linkedin**: "Apply [Name]'s personal LinkedIn voice when drafting any LinkedIn post, comment, or DM on [Name]'s behalf. Use whenever drafting LinkedIn content as [Name]."
 - **content**: "Apply [Name]'s personal longform writing voice when drafting any blog post, essay, op-ed, longform article, or substantial written piece on [Name]'s behalf. Use whenever drafting longform content as [Name]."
 
-### 6b — Write the skill to its install path
+### 6b — Install the skill (environment-aware)
 
-Create the skill folder and write the SKILL.md:
+How the skill gets installed depends on the runtime. Detect which environment you're in and use the matching path. Do NOT fall back to handing the user a raw Terminal `cp` from a temp session path — that's the worst-case UX and is never correct.
+
+**Determine the environment.** Claude Code CLI can read/write the user's real home directory; Claude Desktop and Cowork run the agent sandboxed and cannot reach `<HOME>/.claude/skills/`. Probe once:
+
+```bash
+test -d "<HOME>/.claude/skills" && test -w "<HOME>/.claude/skills" && echo "CLI_WRITABLE" || echo "SANDBOXED"
+```
+
+**Path A — Claude Code CLI (`CLI_WRITABLE`):** write directly to the install path.
 
 ```bash
 mkdir -p "<INSTALLED_PATH>"
 ```
 
-Use the Write tool to write the personalized SKILL.md content (from 6a) to `<INSTALLED_PATH>/SKILL.md`. That's it — the skill is now installed and will activate next time Claude drafts in that medium.
+Use the Write tool to write the SKILL.md content (from 6a) to `<INSTALLED_PATH>/SKILL.md`. Installed and active. Then confirm:
 
-### 6c — Tell the user
+> "Done. Your voiceprint is installed at `~/.claude/skills/myvoiceprint-<medium>/SKILL.md` and auto-activates next time you draft that medium. Run `/reload-plugins` to use it in this session, or it's live in your next one."
 
-Once the file is written, confirm:
+**Path B — Claude Desktop / Cowork (`SANDBOXED`):** the agent CANNOT write to the user's `~/.claude/skills/`. Instead, hand the finished skill to the platform's native **"add as a skill"** flow:
 
-> "Done. Your voiceprint is installed at `~/.claude/skills/myvoiceprint-<medium>/SKILL.md`. It will auto-activate next time you draft <medium> on your behalf — no further install steps.
->
-> To use this voiceprint in other Claude environments:
-> - **claude.ai web/desktop:** copy the SKILL.md contents and upload via skill settings.
-> - **Cowork:** copy the folder `~/.claude/skills/myvoiceprint-<medium>/` into your Cowork skills directory.
->
-> To refine specific sections later (add bans, fix tone, swap an exemplar), rerun `/voiceprint` and pick refine mode. To build voiceprints for other media (email / LinkedIn / content), rerun and pick a different medium."
+1. Write the SKILL.md content (from 6a) to the session workspace/outputs so it exists as a real file (e.g. `myvoiceprint-<medium>/SKILL.md` in the outputs dir).
+2. Present the complete SKILL.md content to the user.
+3. Tell the user — and offer to do it — in these words:
 
-Then nudge: "Run `/reload-plugins` to activate it in this session, or it'll be active automatically in your next session."
+   > "Your `myvoiceprint-<medium>` skill is ready. Just say **'add this as a skill'** and I'll register it — then it auto-activates whenever you draft <medium> on your behalf. No file copying needed."
+
+4. When the user confirms, use the environment's add-as-a-skill capability to register it. Do NOT instruct the user to run shell commands or copy files into a path the sandbox can't see.
+
+### 6c — Closing note (both paths)
+
+Wrap up:
+
+> "To refine it later (add banned phrases, fix a tone issue, swap an exemplar), just say 'refine my voiceprint'. To build voiceprints for other media (email / LinkedIn / content), rerun and pick a different medium."
 
 ---
 
@@ -403,13 +415,14 @@ Used when Step 0c routes to Refine. Skips corpus pull, analysis, and calibration
 
 ### Step R1 — Load the installed skill
 
-Read `<INSTALLED_PATH>/SKILL.md` (i.e., `<HOME>/.claude/skills/myvoiceprint-<medium>/SKILL.md`).
+**Claude Code CLI:** read `<INSTALLED_PATH>/SKILL.md` (i.e., `<HOME>/.claude/skills/myvoiceprint-<medium>/SKILL.md`). If the file doesn't exist, tell the user:
+> "No `myvoiceprint-<medium>` skill installed at `~/.claude/skills/myvoiceprint-<medium>/`. Run `/voiceprint` in create mode first."
+Then stop. If the file is under ~20 lines, warn it looks like a stub and offer create mode instead.
 
-If the file doesn't exist, tell the user:
-> "No `myvoiceprint-<medium>` skill installed at `~/.claude/skills/myvoiceprint-<medium>/`. Run `/voiceprint` in create mode first, then install the output."
-Then stop.
+**Claude Desktop / Cowork (sandboxed):** you can't read `<HOME>/.claude/skills/`. If the `myvoiceprint-<medium>` skill is already loaded in this session, work from its loaded content. If it isn't loaded (or you can't access its text), ask the user:
+> "I can't read installed skills directly in this environment. Paste your current `myvoiceprint-<medium>` SKILL.md (or say 'create' to rebuild it from scratch), and I'll apply the refine edits, then re-register it with 'add as a skill'."
 
-If the file is under ~20 lines, warn the user it looks like a stub and offer to rerun in create mode instead.
+After editing in sandboxed mode, re-install via the Path B "add as a skill" flow from Step 6b rather than writing to the filesystem.
 
 ### Step R2 — Ask what to refine
 
@@ -455,7 +468,7 @@ Wait for confirmation. If they want to adjust, loop back to R3.
 
 ### Step R5 — Apply edits
 
-Make surgical edits to `<INSTALLED_PATH>/SKILL.md`. Rules:
+**Claude Code CLI:** edit `<INSTALLED_PATH>/SKILL.md` in place. **Claude Desktop / Cowork:** edit the loaded/pasted content in memory, then re-register via the Path B "add as a skill" flow (Step 6b) — never write to `<HOME>/.claude/skills/` directly. Either way, apply these rules:
 
 1. **Add to sections, don't replace them** unless the user explicitly asked to remove something.
 2. **Match the formatting** — bullet style, heading level, and wording pattern already in the file.
