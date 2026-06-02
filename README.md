@@ -4,52 +4,85 @@ Personal productivity skills for [Claude Code](https://claude.ai/claude-code) �
 
 ## Installation
 
-To use these skills globally across all your Claude Code projects:
+**Download a single skill** — grab any `.skill` bundle from the [latest release](https://github.com/grahac/claude_skills/releases/latest) (every skill is linked individually in the table below), then:
+
+- **claude.ai (web/desktop):** upload via skill settings
+- **Cowork:** drop the file into your Cowork skills directory
+- **Claude Code:** unzip into `~/.claude/skills/<name>/`
+
+**Install the whole collection in Claude Code:**
 
 ```bash
-# Clone into your .claude/skills directory
-git clone https://github.com/grahac/claude_skills.git ~/.claude/skills/claude_skills
+# Via the plugin marketplace
+/plugin marketplace add grahac/claude_skills
 
-# Or copy individual skills
-cp -r skills/elixir-simplifier ~/.claude/skills/
+# Or clone into your .claude/skills directory
+git clone https://github.com/grahac/claude_skills.git ~/.claude/skills/claude_skills
 ```
 
 ## Skills
 
+Every skill below links to its downloadable `.skill` bundle (always the newest release). Skill names with a detailed write-up further down link to that section.
+
 ### Product & Marketing
 
-- [hyperslide](#hyperslide)
-- [website-extractor](#website-extractor)
-- [marketing-copywriter](#marketing-copywriter)
-- [innovate](#innovate)
-- [nanobanana](#nanobanana)
-- [appstore-images](#appstore-images)
+| Skill | Download |
+|---|---|
+| [hyperslide](#hyperslide) — polished single-file HTML slide decks | [⬇ hyperslide.skill](https://github.com/grahac/claude_skills/releases/latest/download/hyperslide.skill) |
+| [website-extractor](#website-extractor) — extract a site's content + design for a rewrite | [⬇ website-extractor.skill](https://github.com/grahac/claude_skills/releases/latest/download/website-extractor.skill) |
+| [marketing-copywriter](#marketing-copywriter) — landing pages, emails, ads, messaging | [⬇ marketing-copywriter.skill](https://github.com/grahac/claude_skills/releases/latest/download/marketing-copywriter.skill) |
+| [innovate](#innovate) — the single highest-leverage addition to a plan | [⬇ innovate.skill](https://github.com/grahac/claude_skills/releases/latest/download/innovate.skill) |
+| [nanobanana](#nanobanana) — photo-realistic image generation via Gemini | [⬇ nanobanana.skill](https://github.com/grahac/claude_skills/releases/latest/download/nanobanana.skill) |
+| [appstore-images](#appstore-images) — device-framed App Store preview screens | [⬇ appstore-images.skill](https://github.com/grahac/claude_skills/releases/latest/download/appstore-images.skill) |
 
 ### Strategy
 
-- [indispensable-need](#indispensable-need)
+| Skill | Download |
+|---|---|
+| [indispensable-need](#indispensable-need) — find the high-stakes JTBD with no substitute | [⬇ indispensable-need.skill](https://github.com/grahac/claude_skills/releases/latest/download/indispensable-need.skill) |
 
 ### Development
 
-- [elixir-simplifier](#elixir-simplifier)
-- [prompt-cache-optimizer](#prompt-cache-optimizer)
-- [changelog](#changelog)
+| Skill | Download |
+|---|---|
+| [elixir-simplifier](#elixir-simplifier) — refactor Elixir/Phoenix/LiveView, remove duplication | [⬇ elixir-simplifier.skill](https://github.com/grahac/claude_skills/releases/latest/download/elixir-simplifier.skill) |
+| elixir-deps-check — audit Elixir dependencies | [⬇ elixir-deps-check.skill](https://github.com/grahac/claude_skills/releases/latest/download/elixir-deps-check.skill) |
+| [prompt-cache-optimizer](#prompt-cache-optimizer) — fix prompt-caching anti-patterns | [⬇ prompt-cache-optimizer.skill](https://github.com/grahac/claude_skills/releases/latest/download/prompt-cache-optimizer.skill) |
+| [changelog](#changelog) — Keep a Changelog-style CHANGELOG.md from git history | [⬇ changelog.skill](https://github.com/grahac/claude_skills/releases/latest/download/changelog.skill) |
+| pull-main — safely sync the local branch with main | [⬇ pull-main.skill](https://github.com/grahac/claude_skills/releases/latest/download/pull-main.skill) |
+| pr-recap — non-technical product summary of recent PRs/commits | [⬇ pr-recap.skill](https://github.com/grahac/claude_skills/releases/latest/download/pr-recap.skill) |
 
 ### Productivity
 
-- [granola-scoop](#granola-scoop)
+| Skill | Download |
+|---|---|
+| [granola-scoop](#granola-scoop) — extract Granola meeting notes from the local cache | [⬇ granola-scoop.skill](https://github.com/grahac/claude_skills/releases/latest/download/granola-scoop.skill) |
+| suggest-skills — recommend which skill fits the task at hand | [⬇ suggest-skills.skill](https://github.com/grahac/claude_skills/releases/latest/download/suggest-skills.skill) |
 
 ### Writing
 
-- [voiceprint](#voiceprint)
+| Skill | Download |
+|---|---|
+| [voiceprint](#voiceprint) — clone your writing voice as a per-medium skill | [⬇ voiceprint.skill](https://github.com/grahac/claude_skills/releases/latest/download/voiceprint.skill) |
 
 ### Security
 
-- [security-audit-skills](#security-audit-skills)
+| Skill | Download |
+|---|---|
+| [security-audit-skills](#security-audit-skills) — audit your Claude config (skills, plugins, hooks) | [⬇ security-audit-skills.skill](https://github.com/grahac/claude_skills/releases/latest/download/security-audit-skills.skill) |
 
 ### Contracts
 
-- [contract-manager](#contract-manager)
+| Skill | Download |
+|---|---|
+| [contract-manager](#contract-manager) — multi-agent contract create/review/edit | [⬇ contract-manager.skill](https://github.com/grahac/claude_skills/releases/latest/download/contract-manager.skill) |
+
+### Cowork & Setup
+
+| Skill | Download |
+|---|---|
+| cowork — load Cowork working principles / onboarding | [⬇ cowork.skill](https://github.com/grahac/claude_skills/releases/latest/download/cowork.skill) |
+| plugin-doctor — diagnose and fix plugin/marketplace install problems | [⬇ plugin-doctor.skill](https://github.com/grahac/claude_skills/releases/latest/download/plugin-doctor.skill) |
 
 > **Full file map:** See [SKILLS-MAP.md](SKILLS-MAP.md) for the complete directory structure of every skill.
 
