@@ -188,10 +188,12 @@ For every pattern claimed, pull a real example from the corpus. Classify each as
    - Average paragraph length (sentences per paragraph)
    These are quantitative targets for Claude to hit when drafting, not qualitative descriptions.
 
-**Exemplar selection.** After analysis, choose 5–6 corpus pieces to embed verbatim in the output file as voice exemplars. Categorize them:
-- **Short-form** (2–3 samples, under ~75 words each): natural rhythm across different registers
-- **Medium-form** (2 samples): explanation or narrative showing depth
-- **Opinionated** (1 sample): the piece with the strongest, most distinct voice
+**Seed-ban audit.** Check every item on the Section 1 seed ban list (see Step 3) against the corpus. Any item appearing in 3+ pieces is the user's real voice, not an LLM-ism — exclude it from the generated ban list and, if distinctive, record it as a positive pattern in Section 3. The seed list is a default, not a mandate; never ban something the user demonstrably does.
+
+**Exemplar selection.** After analysis, choose 12–15 corpus pieces to embed verbatim in the output file as voice exemplars (scale down only if the corpus is small, e.g. a 10-piece content corpus). Tag every exemplar with scenario and register so the generated skill can pick the closest matches at draft time. Categorize them:
+- **Short-form** (5–6 samples, under ~75 words each): natural rhythm across different scenarios and registers
+- **Medium-form** (4–5 samples): explanation or narrative showing depth
+- **Opinionated** (2–3 samples): the pieces with the strongest, most distinct voice
 
 If a piece is over 100 words, extract the most distinctive passage — enough context to stand alone. Use raw text verbatim; do not clean up grammar or phrasing. Authenticity matters more than polish.
 
@@ -215,7 +217,11 @@ This is the BODY of the generated `myvoiceprint-<medium>` skill (everything afte
 
 ## 1. LLM-ism ban list (HARD)
 
-Standard ban list seed (always include):
+[Seed list below — include each item ONLY if it passed the Step 2 seed-ban audit
+(i.e., the corpus does NOT use it). Items the user actually uses in 3+ pieces are
+voice, not LLM-isms: leave them off this list.]
+
+Standard ban list seed:
 - "I hope this email finds you well" / "I hope you're doing well"  [email]
 - "I wanted to reach out" / "I am writing to"
 - "Please don't hesitate to contact me" / "Should you have any questions"
@@ -232,6 +238,12 @@ Standard ban list seed (always include):
 
 [Add corpus-found additions, and absences — words the user never uses that Claude
 reaches for by default.]
+
+Enforcement: a ban line alone does not stick — character-level items (em dash,
+semicolon, ellipsis) leak back in. Every draft gets a mandatory literal-text scan
+against this list before delivery (see the drafting instructions at the top of this
+skill). When a scan hit forces a rewrite, replace an em dash with a period, comma,
+or parentheses — whichever the Section 6 exemplars support.
 
 ## 2. Anti-performative rules
 [Don't repeat a phrase just because it appeared once. Don't manufacture catchphrases.
@@ -266,18 +278,20 @@ then length pass. Default: write less.]
 
 ## 6. Voice exemplars (verbatim)
 
-These are actual pieces from the corpus. They ARE the voice — read them before
-delivering any draft. Every pattern rule above should be visible here.
+These are actual pieces from the corpus. They ARE the voice. Before drafting, find
+the 2–3 exemplars whose scenario and register tags are closest to the current task
+and pattern-match against those specifically — not against the set as a whole.
 
 ### Short-form
-[2–3 verbatim samples under ~75 words each. Label each with context in parens:
-(email reply, intro thread), (LinkedIn comment), (quick follow-up), etc.]
+[5–6 verbatim samples under ~75 words each. Tag each with scenario and register in
+parens: (decline, casual, peer), (intro reply, formal, new contact), (nudge, brief),
+(LinkedIn comment), etc.]
 
 ### Medium-form
-[2 verbatim samples showing explanation or narrative depth. Label context.]
+[4–5 verbatim samples showing explanation or narrative depth. Tag scenario and register.]
 
 ### Opinionated
-[1 verbatim sample with the strongest, most distinct voice. Label context.]
+[2–3 verbatim samples with the strongest, most distinct voice. Tag scenario and register.]
 
 ## 7. Sample transformations
 
@@ -355,10 +369,11 @@ When asked to draft any longform content on [Name]'s behalf:
 
 1. Apply every rule in the voiceprint below.
 2. Mode-specific rules win over general rules.
-3. Read Section 6 (Voice exemplars) before writing — they are the ground truth.
+3. Before writing, find the 2–3 exemplars in Section 6 whose scenario and register tags are closest to the current task. Pattern-match the draft's opener, rhythm, and closer against those specifically — they are the ground truth.
 4. Use Section 3 sentence metrics as quantitative targets. After drafting, scan rhythm; revise if the draft consistently falls outside the typical range.
 5. Compare your draft against Section 7 "Your voice" examples — if it reads more like the "Generic" column, revise.
-6. Do not mention that you are applying a voiceprint. Just produce the draft.
+6. MANDATORY final pass before delivering: scan the literal draft text for every Section 1 ban entry, including character-level items (em dash, semicolon, ellipsis). If any appear, rewrite that sentence — for an em dash, use a period, comma, or parentheses instead. Never deliver a draft that fails this scan.
+7. Do not mention that you are applying a voiceprint. Just produce the draft.
 
 ---
 

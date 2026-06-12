@@ -36,6 +36,12 @@ When the user passes a single post URL for the content medium, you can't build a
 ## Site chrome bleeds into content corpus
 WebFetch returns the full rendered page. Strip nav, sidebar, comments, author bio, related-posts blocks before analyzing — otherwise the "voice" will include the site's marketing copy.
 
+## Seed ban list overrides real voice
+The Section 1 seed list is a default, not a mandate. If the corpus shows the user actually uses an item (em dashes, semicolons, "Best regards" — 3+ pieces), banning it forces Claude to suppress real voice. Run the Step 2 seed-ban audit and drop any seed item the corpus contradicts.
+
+## Character-level bans don't stick without a mechanical scan
+"Don't use em dashes" as a rule alone fails in practice — em dashes are too strong in the model's prior and leak back into drafts. The generated skill must include a MANDATORY post-draft literal-text scan for banned characters (em dash, semicolon, ellipsis) with a rewrite step and a concrete replacement strategy (period, comma, or parentheses). A scan-and-rewrite pass works; a "don't" instruction alone doesn't.
+
 ## Pattern claimed without evidence
 Don't assert a pattern unless it appears in at least 3 corpus pieces. One-off usage is not voice. Always pull a real example from the corpus when claiming a pattern.
 
