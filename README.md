@@ -34,6 +34,7 @@ Every skill below links to its downloadable `.skill` bundle (always the newest r
 | [innovate](#innovate) — the single highest-leverage addition to a plan | [⬇ innovate.skill](https://github.com/grahac/claude_skills/releases/latest/download/innovate.skill) |
 | [nanobanana](#nanobanana) — photo-realistic image generation via Gemini | [⬇ nanobanana.skill](https://github.com/grahac/claude_skills/releases/latest/download/nanobanana.skill) |
 | [appstore-images](#appstore-images) — device-framed App Store preview screens | [⬇ appstore-images.skill](https://github.com/grahac/claude_skills/releases/latest/download/appstore-images.skill) |
+| [product-naming](#product-naming) — brandable product/company names with open domains | [⬇ product-naming.skill](https://github.com/grahac/claude_skills/releases/latest/download/product-naming.skill) |
 
 ### Strategy
 
@@ -56,7 +57,6 @@ Every skill below links to its downloadable `.skill` bundle (always the newest r
 
 | Skill | Download |
 |---|---|
-| [granola-scoop](#granola-scoop) — extract Granola meeting notes from the local cache | [⬇ granola-scoop.skill](https://github.com/grahac/claude_skills/releases/latest/download/granola-scoop.skill) |
 | suggest-skills — recommend which skill fits the task at hand | [⬇ suggest-skills.skill](https://github.com/grahac/claude_skills/releases/latest/download/suggest-skills.skill) |
 
 ### Writing
@@ -203,6 +203,23 @@ Generates polished App Store preview screens for iPhone, iPad, and Mac — compo
 
 ---
 
+### product-naming
+
+Generates creative, brandable product and company names and checks domain availability in real time via whois.
+
+**Use when:**
+- Naming a new product, company, app, or service
+- Brainstorming brandable names with an open `.com` or `.ai`
+
+**Key principles:**
+- Produces 20 names across four styles (portmanteaus, puns, alliteration, metaphorical), each under 10 letters and easy to spell
+- Checks `[name].com` first, falls back to `get`/`try` prefixes then `.ai`; only suggests names with an available domain
+- Iterates on your feedback, and offers preliminary trademark-conflict checks once you have finalists
+
+**Invoke:** `/product-naming`
+
+---
+
 ## Strategy
 
 ### indispensable-need
@@ -285,23 +302,6 @@ Creates and manages `CHANGELOG.md` following the [Keep a Changelog 1.1.0](https:
 - Supports `[Unreleased]` workflow and cutting versioned releases with comparison links
 
 **Invoke:** `/changelog`
-
----
-
-## Productivity
-
-### granola-scoop
-
-Extracts meeting notes from [Granola's](https://granola.ai) local cache — no API needed.
-
-**Use when:**
-- Extracting recent meeting notes ("extract my granola meetings")
-- Reviewing what meetings you had ("what meetings did I have this week?")
-- Searching meeting content for people or topics
-
-**Output:** Markdown files saved to `~/.granola-scoop/output/` with meeting metadata, your notes, and AI summaries.
-
-**Invoke:** `/granola-scoop`
 
 ---
 

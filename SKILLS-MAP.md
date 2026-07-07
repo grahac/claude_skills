@@ -76,6 +76,14 @@ appstore-images/
   scripts/requirements.txt        # Pillow
 ```
 
+### product-naming `/product-naming`
+Generate brandable product/company names with live domain-availability checks.
+```
+product-naming/
+  SKILL.md
+  references/naming-patterns.md    # Naming categories, domain strategies, pitfalls
+```
+
 ## Development
 
 ### elixir-simplifier `/elixir-simplifier`
@@ -134,15 +142,6 @@ elixir-deps-check/
 ```
 
 ## Productivity
-
-### granola-scoop `/granola-scoop`
-Extract meeting notes from Granola's local cache.
-```
-granola-scoop/
-  SKILL.md
-  gotchas.md
-  scripts/extract.py              # Extraction script (reads Granola cache)
-```
 
 ### suggest-skills `/suggest-skills`
 Mine recent Claude Code transcripts to surface candidate skills/plugins worth building. Spots repeated tasks, correction loops, and cross-project workflows.

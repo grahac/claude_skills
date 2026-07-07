@@ -9,11 +9,15 @@ and this project uses date-based releases.
 
 ### Added
 - `voiceprint-creator` skill — one-time extraction of personal email writing voice from the last 50 sent emails (Gmail / google-mcp / Microsoft 365), with human review and calibration passes. Packages the result as an installable Claude skill called `myvoiceprint` using `skill-creator`'s scripts (with a raw `SKILL.md` fallback when skill-creator isn't installed). Output works on claude.ai, Claude Code, and Cowork.
+- `product-naming` skill — generate brandable product/company names with real-time domain-availability checks and preliminary trademark guidance
 - New `Writing` skills category in README and SKILLS-MAP
 
 ### Changed
 - `hyperslide` upgraded with two-font pairing (display + body), slide entry animations with staggered children, gradient mesh backgrounds, 15px minimum body text, and WCAG AA contrast guidance
 - `hyperslide` example updated to demonstrate all new design patterns
+
+### Removed
+- `granola-scoop` skill — removed from the collection
 
 ## [2026-02-25]
 
