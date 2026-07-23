@@ -1,6 +1,6 @@
 ---
 name: elixir-deps-check
-description: Audit Elixir dependencies in mix.exs and mix.lock against the latest versions on hex.pm, summarize what changed between the locked and latest versions in plain language, and recommend whether each dep needs a mix.exs constraint bump or just a mix.lock refresh. Use when the user asks "what deps are outdated", "should I update <package>", "audit my mix deps", "what changed in <package> since I locked it", or any variant about Elixir dependency freshness, upgrade planning, or deciding mix.exs vs mix.lock updates.
+description: Audit Elixir dependencies in mix.exs and mix.lock against the latest versions on hex.pm, summarize what changed between the locked and latest versions in plain language, and recommend whether each dep needs a mix.exs constraint bump or just a mix.lock refresh. Use when the user asks "what deps are outdated", "should I update package-name", "audit my mix deps", "what changed in package-name since I locked it", or any variant about Elixir dependency freshness, upgrade planning, or deciding mix.exs vs mix.lock updates.
 ---
 
 # Elixir Deps Check
