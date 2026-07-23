@@ -39,6 +39,9 @@ WebFetch returns the full rendered page. Strip nav, sidebar, comments, author bi
 ## Seed ban list overrides real voice
 The Section 1 seed list is a default, not a mandate. If the corpus shows the user actually uses an item (em dashes, semicolons, "Best regards" — 3+ pieces), banning it forces Claude to suppress real voice. Run the Step 2 seed-ban audit and drop any seed item the corpus contradicts.
 
+## Deslopping flattens the writer
+Anti-slop patterns are diagnostics, not a universal blacklist. A writer may authentically use fragments, binary contrasts, rhetorical questions, parentheticals, or irregular structure. Keep a pattern when at least 3 accepted corpus pieces support it and it carries substance; remove the generic, manufactured version. The result should retain the writer's rough edges rather than sound like polished house style.
+
 ## Character-level bans don't stick without a mechanical scan
 "Don't use em dashes" as a rule alone fails in practice — em dashes are too strong in the model's prior and leak back into drafts. The generated skill must include a MANDATORY post-draft literal-text scan for banned characters (em dash, semicolon, ellipsis) with a rewrite step and a concrete replacement strategy (period, comma, or parentheses). A scan-and-rewrite pass works; a "don't" instruction alone doesn't.
 

@@ -5,7 +5,8 @@ description: >
   specific medium (email, LinkedIn, or longform content), and package it as an
   installable Claude skill (one per medium: myvoiceprint-email, myvoiceprint-linkedin,
   or myvoiceprint-content). The user installs that
-  skill once; from then on, Claude applies their voice when drafting in that medium.
+  skill once; from then on, Claude applies their voice and voice-preserving anti-slop
+  checks when drafting in that medium.
   Use when the user says "create my voiceprint", "build my voiceprint", "refine my
   voiceprint", "update my voiceprint", "make me sound like me", "extract my voice",
   or any variation of capturing or adjusting their writing style. Asks create-or-refine
@@ -85,66 +86,9 @@ Branch by medium.
 
 ### 1a — Email
 
-**MCP detection (main agent).** Scan the connected tool list for ALL email MCPs — don't assume Gmail, don't assume just one. Different accounts often live under different MCPs (e.g., personal Gmail + work Outlook, or two Gmail MCPs namespaced separately). Common provider signatures:
-
-- **Gmail MCP** — `Gmail:search_threads`, `Gmail:get_thread` (also namespaced variants like `mcp__claude_ai_Gmail__*`, `mcp__gmail_work__*`)
-- **google-mcp** — `google-mcp:gmail_search`, `google-mcp:gmail_read`
-- **Microsoft 365 / Outlook** — tools containing `outlook`, `m365`, `microsoft365`, or `mail_*`
-- **Fastmail, ProtonMail, Hey, generic IMAP MCPs** — tools matching `*mail*`, `*email*`, `*messages*`
-
-List every distinct email MCP found and ask:
-
-> "I found these email MCPs connected: [list]. Which one(s) should I pull from, and what's the authored email address for each? List all accounts you want included — the voiceprint will merge them into one."
-
-If none are connected, tell the user to install one for their provider and stop.
-
-**Why a subagent.** A 50-message search + per-message full-content fetch overflows the main agent's context. Spawn a fresh-context subagent (`general-purpose`) to do the pull, filter, and clean — the main agent only ever sees the cleaned corpus.
-
-**Brief the subagent with:**
-- A LIST of `(MCP tool names, user email address)` pairs to pull from. Example:
-  `[(mcp__gmail_personal__search_threads + get_thread, user@example.com),
-    (mcp__outlook_work__search + get_message, user@work.example.com)]`.
-  For a single-account run, the list has one entry.
-- Per-provider query syntax for "sent mail, recent" for each MCP (Gmail: `in:sent -in:draft -in:chats newer_than:18m` plus `from:<address>`; Outlook: filter on `Sent Items` folder with `from:<address>`)
-- The filter-and-clean rules below
-- The merge rules: combine all accounts into one corpus, tag each message with source account
-- A demand to return prose findings only — no raw provider JSON
-
-**Subagent rules — run the per-account loop, then merge:**
-
-For EACH `(MCP, address)` pair in the input list:
-
-1. Pull the user's authored sent messages using that MCP. If the provider exposes a messages-level API (Gmail `users.messages.list`, Outlook `/messages`), prefer it with a `from:<address>` filter to get user-authored messages directly. If only a threads API is available (e.g., the current Gmail MCP which exposes `search_threads` / `get_thread`), pull threads with `in:sent` then filter to messages where `sender` contains `<address>` — same end result.
-2. Paginate until at least 40 user-authored messages from this account are collected (target ~50 each when there are multiple accounts; relax to fewer if the account is low-volume).
-3. Fetch FULL_CONTENT (full message body) for each.
-4. Clean each message body:
-   a. **Strip the quoted reply chain**: lines starting with `>`, blocks starting with "On [date], X wrote:", Outlook-style "From: … Sent: … Subject: …" headers, and everything below them.
-   b. **Strip the signature CONTACT BLOCK only** — multi-line trailing content containing `@`, phone-number digits, URLs, company/title lines, or legal disclaimers. Typically appears below a `--` divider or a blank line at the end.
-   c. **PRESERVE minimalist single-line sign-offs.** These are voice signal — they tell the analyzer how the user closes. Rule: if the trailing line(s) after the blank line or `--` divider is a SINGLE line under ~25 chars and contains no `@`, no URL, no phone digits, KEEP it. Examples to preserve (generic patterns): `--<firstname>`, `--<Firstname>`, `-<initial>`, `<firstname>`, `thx, <initial>`, `xx`. Examples to strip (multi-line contact blocks): `<Full Name>\n+1-415-...`, `Best,\n<Name>\n<Title> @ <Co>\n<url>`.
-5. Filter:
-   - Drop messages < 30 words after stripping (relax to 20 if the clean set drops below 40 for this account).
-   - Drop self-sends (sender equals all recipients).
-   - Drop messages where the recipient list looks automated (`noreply@`, `notifications@`, `calendar-notification@`, `mailer-daemon@`).
-   - Aim for diversity: intros, replies, follow-ups, declines, status updates.
-6. Tag each kept message with `account: <address>`.
-
-**After the per-account loop, merge across accounts:**
-
-7. Combine into one corpus. Aim for ~50 total messages with reasonable balance across accounts (if account A has 80 candidates and account B has 10, sample account A down to ~35–40 so account B isn't drowned out — small-account patterns matter).
-8. Deduplicate exact-duplicate messages (e.g., user self-CC'd between accounts). Keep one copy and note both accounts in the `account` field.
-9. Stop when ~50 clean, merged messages are assembled.
-
-**Subagent returns** a structured list — one entry per kept message:
-- Subject
-- Primary recipient (plus count if multi-recipient)
-- Date
-- **Account** (which user email address sent it — required when multi-account)
-- Stripped body (the text the user actually composed, INCLUDING any minimalist single-line sign-off — those are voice signal)
-- Word count
-
-Plus a brief per-account summary header: how many messages came from each account in the final 50, so the analyzer can spot account-specific patterns.
-
-**After the subagent returns**, show the user the subject list and ask: "Are any of these mostly Claude-drafted? Tell me which subjects to exclude so AI patterns don't feed back." Drop those entries.
+Read [references/email-corpus.md](references/email-corpus.md) completely before
+pulling email. Follow its connector detection, account selection, delegated collection,
+cleaning, balancing, and AI-contamination review. Do not abbreviate the cleaning rules.
 
 ### 1b — LinkedIn
 
@@ -179,7 +123,7 @@ For every pattern claimed, pull a real example from the corpus. Classify each as
 5. **Tone markers** — formality shifts by recipient/topic, warmth, directness, humor, how they decline or disagree
 6. **Formatting habits** — punctuation quirks, emoji, bold/italic, link style, exclamation use
 7. **Closing patterns** — sign-offs / CTAs / outro shape, name inclusion, P.S. usage
-8. **LLM-ism check** — flag patterns that look AI-generated (triadic lists, em-dash clarifications, "I hope this finds you well", delve, leverage). Exclude those pieces from the voice signal.
+8. **LLM-ism check** — flag both stock language and synthetic structure: generic throat-clearing, faux-insight setups, stock binary contrasts, dramatic colon reveals, trailing `-ing` pseudo-analysis, importance puffery, vague attribution, fake-strong verbs, synonym cycling, negative lists, stacked fragments, robotic symmetry, self-answered questions, fake-profound kickers, recap endings, decorative formatting, triadic lists, em-dash clarifications, "I hope this finds you well", delve, and leverage. Treat these as evidence to inspect, not proof of AI authorship. Exclude contaminated pieces from the voice signal; never erase the user's authentic version of a pattern merely because it appears on this list.
 9. **Sentence metrics** — calculate from the full corpus:
    - Average sentence length (words per sentence across all pieces)
    - Sentence length variance (standard deviation of sentence lengths)
@@ -188,7 +132,7 @@ For every pattern claimed, pull a real example from the corpus. Classify each as
    - Average paragraph length (sentences per paragraph)
    These are quantitative targets for Claude to hit when drafting, not qualitative descriptions.
 
-**Seed-ban audit.** Check every item on the Section 1 seed ban list (see Step 3) against the corpus. Any item appearing in 3+ pieces is the user's real voice, not an LLM-ism — exclude it from the generated ban list and, if distinctive, record it as a positive pattern in Section 3. The seed list is a default, not a mandate; never ban something the user demonstrably does.
+**Seed anti-slop audit.** Check every word, character, and structural pattern in the Section 1 seed list against the accepted corpus. Any item appearing substantively in 3+ pieces is evidence of the user's real voice — exclude it from the generated ban list and, if distinctive, record it as a positive pattern in Section 3. Confirm repeated patterns are not coming from pieces the user identified as AI-drafted. The seed list is a diagnostic, not a mandate.
 
 **Exemplar selection.** After analysis, choose 12–15 corpus pieces to embed verbatim in the output file as voice exemplars (scale down only if the corpus is small, e.g. a 10-piece content corpus). Tag every exemplar with scenario and register so the generated skill can pick the closest matches at draft time. Categorize them:
 - **Short-form** (5–6 samples, under ~75 words each): natural rhythm across different scenarios and registers
@@ -236,18 +180,28 @@ Standard ban list seed:
 - Em dashes (—) for elaboration or clarification
 - Ellipses (…)
 
+Structural slop seed (audit each item against the corpus before including it):
+- Generic throat-clearing and faux-insight setups
+- Stock binary contrasts, negative lists, self-answered questions, and stacked fragments used only for drama
+- Dramatic colon reveals and trailing `-ing` clauses that gesture at analysis
+- Importance puffery, vague attribution, fake-strong verbs, and synonym cycling
+- Robotic symmetry, repeated sentence shapes, and forced three-part structures
+- Fake-profound kicker lines, recap endings, and decorative formatting
+
 [Add corpus-found additions, and absences — words the user never uses that Claude
 reaches for by default.]
 
-Enforcement: a ban line alone does not stick — character-level items (em dash,
-semicolon, ellipsis) leak back in. Every draft gets a mandatory literal-text scan
-against this list before delivery (see the drafting instructions at the top of this
-skill). When a scan hit forces a rewrite, replace an em dash with a period, comma,
-or parentheses — whichever the Section 6 exemplars support.
+Enforcement: a ban line alone does not stick. Every draft gets both a literal-text
+scan for word and character bans and a structural scan for the patterns above. When
+a scan hit forces a rewrite, preserve the claim and concrete detail. Replace an em
+dash with a period, comma, or parentheses — whichever the Section 6 exemplars support.
+Do not mechanically remove a pattern supported by at least 3 accepted corpus pieces.
 
 ## 2. Anti-performative rules
-[Don't repeat a phrase just because it appeared once. Don't manufacture catchphrases.
-Don't caricature casual tone.]
+[Preserve distinctive vocabulary, cadence, bluntness, humor, uncertainty, useful
+digressions, and unevenness. Make the minimum effective edit. Don't repeat a phrase
+just because it appeared once, manufacture catchphrases or frameworks, caricature
+casual tone, or make every paragraph equally tidy.]
 
 ## 3. Core voice patterns
 
@@ -273,8 +227,10 @@ signature contact blocks and CTA links, sometimes formality. Don't try to merge
 account-specific details into universal rules.]
 
 ## 5. Adaptation rules
-[Pre-draft checklist: audience, desired next action. Two-pass review: LLM-ism pass,
-then length pass. Default: write less.]
+[Pre-draft checklist: core claim, audience, concrete support, desired next action.
+Three-pass review: fidelity to meaning and voice; literal and structural slop; rhythm
+and length. Lead with the point when setup adds nothing, but keep personal context
+that creates tension or character. Default: write no more than the piece needs.]
 
 ## 6. Voice exemplars (verbatim)
 
@@ -367,12 +323,12 @@ description: >
 
 When asked to draft any longform content on [Name]'s behalf:
 
-1. Apply every rule in the voiceprint below.
-2. Mode-specific rules win over general rules.
+1. Preserve the writer's claims, examples, caveats, ordering, and distinctive rough edges. Do not invent facts or rewrite clear human lines merely for consistency.
+2. Apply every rule in the voiceprint below. Mode-specific rules win over general rules.
 3. Before writing, find the 2–3 exemplars in Section 6 whose scenario and register tags are closest to the current task. Pattern-match the draft's opener, rhythm, and closer against those specifically — they are the ground truth.
 4. Use Section 3 sentence metrics as quantitative targets. After drafting, scan rhythm; revise if the draft consistently falls outside the typical range.
 5. Compare your draft against Section 7 "Your voice" examples — if it reads more like the "Generic" column, revise.
-6. MANDATORY final pass before delivering: scan the literal draft text for every Section 1 ban entry, including character-level items (em dash, semicolon, ellipsis). If any appear, rewrite that sentence — for an em dash, use a period, comma, or parentheses instead. Never deliver a draft that fails this scan.
+6. MANDATORY final pass before delivering: run both the literal and structural scans from Section 1. Rewrite unsupported slop while preserving the point and concrete detail. Keep voice patterns supported by the exemplars. Never deliver a draft that fails either scan.
 7. Do not mention that you are applying a voiceprint. Just produce the draft.
 
 ---
@@ -524,6 +480,8 @@ Final wrap-up:
 - Don't over-extract. If a pattern appears in 5 of 50 pieces, the rule is "occasionally does X", not "signature move is X".
 - Watch for AI contamination. Ask up front and exclude flagged pieces.
 - Multilingual corpus → run analysis per-language and produce per-language mode rules.
+- Treat anti-slop patterns as diagnostic evidence, not proof of AI authorship and not automatic deletion. Preserve authentic fragments, contrasts, rhetorical questions, parentheticals, and irregular structure when the corpus supports them.
+- Never let a deslop pass add a claim, source, statistic, example, opinion, or cleaner-but-less-specific abstraction.
 
 ## Refine notes
 
