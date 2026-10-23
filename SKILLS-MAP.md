@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 19 skills across 7 categories.
+Quick reference for the skill packages and supporting files in this repository.
 
 ## Skill Directory Convention
 
@@ -12,6 +12,36 @@ skill-name/
   references/           # Detailed examples, checklists, criteria (read on demand)
   assets/               # Templates, starter files, reusable formats
   scripts/              # Executable scripts (Python, etc.)
+```
+
+## Connected service workflows
+
+### tablethis
+Native OAuth MCP instructions for bounded workspace research and explicitly approved change proposals.
+```
+tablethis/
+  SKILL.md
+  README.md
+  LICENSE
+  SOURCE-ATTRIBUTION.md
+  references/connection.md
+  references/workflows.md
+  scripts/validate.py
+  tests/test_validate.py
+```
+
+### tessamonials
+Private customer-interview evidence review; read-only by default with separate saved-change, invitation, and publication gates.
+```
+tessamonials/
+  SKILL.md
+  README.md
+  LISTING.md
+  LICENSE
+  references/action-gates.md
+  references/read-only-server.json
+  references/review-template.md
+  references/sources.md
 ```
 
 ## Product & Marketing
