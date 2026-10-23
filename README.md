@@ -22,7 +22,21 @@ git clone https://github.com/grahac/claude_skills.git ~/.claude/skills/claude_sk
 
 ## Skills
 
-Every skill below links to its downloadable `.skill` bundle (always the newest release). Skill names with a detailed write-up further down link to that section.
+Released skills below link to their downloadable `.skill` bundles (always the newest release). Source-only additions are marked separately. Skill names with a detailed write-up further down link to that section.
+
+### Connected service workflows
+
+These instruction skills use an existing remote OAuth MCP connection; installing
+the files does not connect an account or authorize private-data access. Start
+read-only and follow each skill's setup, identity, and action-approval boundaries.
+The OpenClaw instructions are documentation-checked, not authenticated end-to-end
+runtime tests. ClawHub publication and downloadable release bundles are separate
+release steps; the links below point to the source packages.
+
+| Skill | Source |
+|---|---|
+| TableThis — bounded shared-table/document research and owner-approved proposals | [tablethis](skills/tablethis/SKILL.md) |
+| Tessamonials — private interview evidence review with separate send/publication gates | [tessamonials](skills/tessamonials/SKILL.md) |
 
 ### Product & Marketing
 
