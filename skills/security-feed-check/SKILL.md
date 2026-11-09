@@ -23,7 +23,7 @@ Config and state live in `$SECURITY_FEED_CHECK_HOME` (default `~/.config/securit
 
 ## 0. Setup (first run only)
 
-The config folder is `$SECURITY_FEED_CHECK_HOME`, or `~/.config/security-feed-check/` when that is unset. If `watchlist.json` does not exist there, copy `assets/watchlist.example.json` there and ask the user to fill in `deployed_projects` and `local_lockfile_globs`, or to delete them. If running unattended, stop and say setup is needed.
+The config folder is `$SECURITY_FEED_CHECK_HOME`, or `~/.config/security-feed-check/` when that is unset. If `watchlist.json` does not exist there, copy `assets/watchlist.example.json` there and ask the user which tools, frameworks and apps they run, to add to `tags` and `keywords`. `local_lockfile_globs`, `deployed_projects` and `fly_postgres_apps` are optional. If running unattended, stop and say setup is needed.
 
 `auto_update` defaults to `true`. Set it to `false` for report-only.
 
