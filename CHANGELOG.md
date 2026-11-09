@@ -8,6 +8,7 @@ and this project uses date-based releases.
 ## [Unreleased]
 
 ### Added
+- `security-feed-check` skill — daily check of the pwn.watch and Cloudflare Radar Zero Wire vulnerability feeds against installed and deployed versions, with verified narrow local updates on by default and report-only gating for production. Works in Claude Code and Codex.
 - `voiceprint-creator` skill — one-time extraction of personal email writing voice from the last 50 sent emails (Gmail / google-mcp / Microsoft 365), with human review and calibration passes. Packages the result as an installable Claude skill called `myvoiceprint` using `skill-creator`'s scripts (with a raw `SKILL.md` fallback when skill-creator isn't installed). Output works on claude.ai, Claude Code, and Cowork.
 - `product-naming` skill — generate brandable product/company names with real-time domain-availability checks and preliminary trademark guidance
 - New `Writing` skills category in README and SKILLS-MAP

@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Check pwn.watch and Cloudflare Radar Zero Wire against your watchlist. Read-only; never patches anything.
+
+  check.py              new or updated matches since the last --commit (markdown)
+  check.py --all-live   also list every live pwn.watch match, ignoring seen state
+  check.py --commit     record what was reported in seen.json
+  check.py inventory    print installed versions on this machine + what each deployed project ships
+
+Config and state live in $SECURITY_FEED_CHECK_HOME (default ~/.config/security-feed-check):
+watchlist.json (copy assets/watchlist.example.json) and seen.json.
+"""
+import glob, json, os, platform, re, subprocess, sys, urllib.request
+import xml.etree.ElementTree as ET
+from datetime import date
+
+HOME = os.path.expanduser(os.environ.get("SECURITY_FEED_CHECK_HOME", "~/.config/security-feed-check"))
+WATCHLIST = os.path.join(HOME, "watchlist.json")
+SEEN = os.path.join(HOME, "seen.json")
+INCIDENTS_URL = "https://pwn.watch/incidents.json"
+ZERO_WIRE_RSS = "https://radar.cloudflare.com/security/zero-wire/rss"
+# pwn.watch rejects the default Python User-Agent with a 403.
+USER_AGENT = "security-feed-check/1 (+https://github.com/grahac/claude_skills)"
+
+
+def fetch_raw(url):
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read()
+
+
+def load_watchlist():
+    if not os.path.exists(WATCHLIST):
+        sys.exit(f"No watchlist at {WATCHLIST}. Copy assets/watchlist.example.json there and edit it.")
+    return json.load(open(WATCHLIST))
+
+
+def matches(inc, watch):
+    tags = {t.lower() for t in inc.get("tags", [])}
+    if tags & watch["tags"]:
+        return True
+    hay = (inc.get("product", "") + " " + inc.get("title", "")).lower()
+    return any(re.search(r"(?<![a-z0-9])" + re.escape(k) + r"(?![a-z0-9])", hay) for k in watch["keywords"])
+
+
+def fmt(inc):
+    cves = ", ".join(inc.get("cveIds") or []) or "no CVE"
+    fixed = ", ".join(inc.get("fixedVersions") or []) or "none yet"
+    affected = ", ".join(inc.get("affectedVersions") or []) or "unspecified"
+    return (
+        f"- **[{inc['severity']}/{inc['patchStatus']}]** {inc['title']}\n"
+        f"  {inc['url']}\n"
+        f"  product: {inc.get('product','?')}\n"
+        f"  affected: {affected}\n"
+        f"  fixed in: {fixed}\n"
+        f"  CVEs: {cves} · updated {inc['updatedAt'][:10]} · brief: {inc['json']}"
+    )
+
+
+def zero_wire():
+    """Zero Wire items flagged 'Needs attention': a short curated feed, so none are filtered out."""
+    items = []
+    for it in ET.fromstring(fetch_raw(ZERO_WIRE_RSS)).iter("item"):
+        cats = [c.text for c in it.findall("category")]
+        if "Needs attention" not in cats:
+            continue
+        guid = it.findtext("guid")  # slug@last-update-date, so it changes when the item is updated
+        items.append({"slug": "zerowire:" + guid.split("@")[0], "guid": guid, "title": it.findtext("title"),
+                      "link": it.findtext("link"), "tags": [c for c in cats if c != "Needs attention"],
+                      "action": it.findtext("description")})
+    return items
+
+
+def check(all_live, commit):
+    wl = load_watchlist()
+    watch = {"tags": {t.lower() for t in wl["tags"]}, "keywords": [k.lower() for k in wl["keywords"]]}
+    seen = json.load(open(SEEN)) if os.path.exists(SEEN) else {}
+    data = json.loads(fetch_raw(INCIDENTS_URL))
+    incidents = [i for i in data["incidents"] if not i.get("isExample")]
+    matched = [i for i in incidents if matches(i, watch)]
+    live = [i for i in matched if i["status"] == "live"]
+    new = [i for i in matched if seen.get(i["slug"]) != i["updatedAt"]]
+
+    print(f"# Security feed check {date.today().isoformat()}")
+    print(f"pwn.watch feed updated {data['updatedAt'][:16]}Z · {len(incidents)} incidents · "
+          f"{len(matched)} match watchlist · {len(live)} live · {len(new)} new/updated since last run\n")
+    print("## pwn.watch: new or updated matches" + (" (first run: everything counts as new)" if not seen else ""))
+    print("\n".join(fmt(i) for i in new) if new else "- none")
+    if all_live:
+        print("\n## pwn.watch: all live matches")
+        print("\n".join(fmt(i) for i in live) if live else "- none")
+
+    zw = zero_wire()
+    print(f"\n## Cloudflare Zero Wire: needs attention ({len(zw)} items, not watchlist-filtered; check each for applicability)")
+    for z in zw:
+        print(f"- {'🆕 ' if seen.get(z['slug']) != z['guid'] else ''}**{z['title']}** ({z['guid']})\n"
+              f"  {z['link']}\n  tags: {', '.join(z['tags'])}\n  action: {z['action']}")
+    if not zw:
+        print("- none")
+
+    if commit:
+        state = {i["slug"]: i["updatedAt"] for i in matched} | {z["slug"]: z["guid"] for z in zw}
+        json.dump(state, open(SEEN, "w"), indent=1)
+        print(f"\n_seen.json updated ({len(state)} slugs)_")
+
+
+def sh(cmd):
+    try:
+        return subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=120).stdout.strip()
+    except Exception as e:  # inventory is best-effort; a failed probe is printed, not fatal
+        return f"error: {e}"
+
+
+def lock_versions(text):
+    """Compact 'name version;' list from a mix.lock or package-lock.json body (top-level npm packages only)."""
+    if text.lstrip().startswith("{"):
+        pkgs = json.loads(text).get("packages", {})
+        return ";".join(f"{k[13:]} {v.get('version','?')}" for k, v in sorted(pkgs.items())
+                        if k.startswith("node_modules/") and "/node_modules/" not in k[13:])
+    return ";".join(f"{n} {v}" for n, v in re.findall(r'^  "([a-z_0-9]+)": \{:hex, :[a-z_0-9]+, "([0-9][^"]*)"', text, re.M))
+
+
+def inventory():
+    wl = load_watchlist()
+    print("## This machine")
+    print("os:", platform.platform())
+    print("runtimes: node", sh("node -v 2>/dev/null"), "| python3", sh("python3 --version 2>/dev/null"),
+          "| ruby", sh("ruby -v 2>/dev/null"), "| elixir", sh("elixir --short-version 2>/dev/null"),
+          "| docker", sh("docker --version 2>/dev/null"), "| git", sh("git --version 2>/dev/null"))
+    if sys.platform == "darwin":
+        print("apps:", sh("for a in /Applications/*.app; do v=$(defaults read \"$a/Contents/Info.plist\" "
+                          "CFBundleShortVersionString 2>/dev/null); echo \"$(basename \"$a\" .app) $v\"; done | tr '\\n' ';'"))
+    print("brew:", sh("brew list --versions 2>/dev/null | tr '\\n' ';'") or "not installed")
+    print("npm -g:", sh("npm ls -g --depth=0 2>/dev/null | tail -n +2 | tr '\\n' ';'"))
+
+    for pattern in wl.get("local_lockfile_globs", []):
+        for path in sorted(glob.glob(os.path.expanduser(pattern))):
+            print(f"\n### {path}\n{lock_versions(open(path).read())}")
+
+    projects = wl.get("deployed_projects", {})
+    if projects:
+        print("\n## Deployed projects (read from each repo's origin default branch, assumed to be what is deployed)")
+    for name, repo in projects.items():
+        repo = os.path.expanduser(repo)
+        sh(f"git -C {repo} fetch -q origin")
+        ref = sh(f"git -C {repo} rev-parse --abbrev-ref origin/HEAD")
+        print(f"\n### {name} ({repo} @ {ref or 'UNKNOWN: no origin/HEAD'})")
+        print("image:", sh(f"git -C {repo} show {ref}:Dockerfile 2>/dev/null | grep -E '^(ARG [A-Z_]*VERSION|FROM)' | tr '\\n' ';'"))
+        for lock in ("mix.lock", "package-lock.json", "assets/package-lock.json"):
+            body = subprocess.run(["git", "-C", repo, "show", f"{ref}:{lock}"], capture_output=True, text=True).stdout
+            if body:
+                print(f"{lock}:", lock_versions(body))
+
+    for app in wl.get("fly_postgres_apps", []):
+        print(f"\nfly postgres {app}:", sh(f"fly machines list -a {app} --json | python3 -c 'import json,sys; "
+                                         f"print(sorted({{m[\"config\"][\"image\"].split(\"@\")[0] for m in json.load(sys.stdin)}}))'"))
+
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    if "inventory" in args:
+        inventory()
+    else:
+        check("--all-live" in args, "--commit" in args)

@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 19 skills across 7 categories.
+Quick reference for where everything lives. 21 skills across 7 categories.
 
 ## Skill Directory Convention
 
@@ -172,6 +172,16 @@ security-audit-skills/
   references/security-criteria.md # Check criteria by severity
   assets/report-template.md       # Audit report output format
   assets/ignore-entry-template.md # Format for ignore list entries
+```
+
+### security-feed-check `/security-feed-check`
+Check pwn.watch + Cloudflare Zero Wire against installed and deployed versions; apply safe local updates; report what affects you.
+```
+security-feed-check/
+  SKILL.md
+  gotchas.md
+  scripts/check.py                # Feed fetch + seen-state diff + inventory (stdlib only)
+  assets/watchlist.example.json   # Copy to ~/.config/security-feed-check/watchlist.json
 ```
 
 ## Writing

@@ -70,6 +70,7 @@ Every skill below links to its downloadable `.skill` bundle (always the newest r
 | Skill | Download |
 |---|---|
 | [security-audit-skills](#security-audit-skills) — audit your Claude config (skills, plugins, hooks) | [⬇ security-audit-skills.skill](https://github.com/grahac/claude_skills/releases/latest/download/security-audit-skills.skill) |
+| [security-feed-check](#security-feed-check) — daily vulnerability check against what you actually run, with safe local updates | [⬇ security-feed-check.skill](https://github.com/grahac/claude_skills/releases/latest/download/security-feed-check.skill) |
 
 ### Contracts
 
@@ -352,6 +353,24 @@ Performs security audits of your Claude Code configuration — skills, plugins, 
 - Checks for hooks with broad access
 
 **Invoke:** `/security-audit-skills`
+
+### security-feed-check
+
+Checks the [pwn.watch](https://pwn.watch) and [Cloudflare Radar Zero Wire](https://radar.cloudflare.com/security/zero-wire) vulnerability feeds against what is installed on your machine and in your deployed projects. Works in Claude Code and Codex.
+
+**Use when:**
+- You want a daily "does any new vulnerability affect me?" check
+- A big vulnerability is in the news and you want to know if you are exposed
+
+**Key principles:**
+- Reports only what affects you, each with an exact fix and a link to the vendor advisory
+- Applies narrow local updates by default (closed apps, single packages, same major version) and verifies each one; set `"auto_update": false` for report-only
+- Never touches production, running apps, databases or project lockfiles; those go in the report for your approval
+- Treats feed content as untrusted data
+
+**Setup:** copy `assets/watchlist.example.json` to `~/.config/security-feed-check/watchlist.json` and edit it. Schedule it with cron, Paseo, `/loop` or `codex exec` for a daily report.
+
+**Invoke:** `/security-feed-check`
 
 ---
 
