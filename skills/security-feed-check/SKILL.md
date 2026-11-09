@@ -14,7 +14,8 @@ Works in Claude Code and Codex. Runs fine unattended (cron, Paseo, `/loop`, `cod
 
 ## Files
 
-- `scripts/check.py` — fetches both feeds, diffs against seen state, and prints inventory. Read-only. Python 3 standard library only.
+- `scripts/check.py` — fetches both feeds, diffs against seen state, and prints inventory. Never patches anything. Python 3 standard library only.
+- `scripts/test_check.py` — offline tests for the script: `python3 -B scripts/test_check.py`.
 - `assets/watchlist.example.json` — starting watchlist.
 - `gotchas.md` — known failure patterns. Read it before the first run.
 
@@ -22,7 +23,7 @@ Config and state live in `$SECURITY_FEED_CHECK_HOME` (default `~/.config/securit
 
 ## 0. Setup (first run only)
 
-If `~/.config/security-feed-check/watchlist.json` does not exist, copy `assets/watchlist.example.json` there and ask the user to fill in `deployed_projects` and `local_lockfile_globs`, or to delete them. If running unattended, stop and say setup is needed.
+The config folder is `$SECURITY_FEED_CHECK_HOME`, or `~/.config/security-feed-check/` when that is unset. If `watchlist.json` does not exist there, copy `assets/watchlist.example.json` there and ask the user to fill in `deployed_projects` and `local_lockfile_globs`, or to delete them. If running unattended, stop and say setup is needed.
 
 `auto_update` defaults to `true`. Set it to `false` for report-only.
 
@@ -35,7 +36,7 @@ python3 -I <skill>/scripts/check.py --all-live
 python3 -I <skill>/scripts/check.py inventory
 ```
 
-- If a feed or inventory command fails, report the exact error and which coverage is missing. Never call the check clean.
+- If a feed or inventory command fails, or prints `COVERAGE LOST` or `UNKNOWN`, report the exact error and which coverage is missing. Never call the check clean.
 - Inventory probes are best-effort. Missing output means UNKNOWN, not safe.
 - `deployed_projects` reads each repo's origin default branch. That is evidence of what *should* be deployed, not proof of what *is*. Before recommending a redeploy, check the running image or the installed component version on the host with read-only commands. Never start, stop, restart, update or deploy anything in production.
 - For every candidate finding, verify the installed product and version against the **primary vendor advisory** and the current official release. No vendor fix, or not enough evidence it applies, means report-only.
@@ -63,7 +64,7 @@ If the new version still contains the vulnerable component, do not reinstall aga
 ## 3. Verify and record
 
 - After each update, re-read the installed version. For GUI apps, verify the publisher signature and the relevant bundled component version. For packages, run a small version or import check. If verification fails, stop changing that component, keep the rollback copy, and report it.
-- Write the report, exact commands, before and after versions, errors, staged installers and rollback paths to a new `<reports_dir>/<date>-<run-id>/` folder. Never overwrite another run's folder or store secrets there.
+- Write the report, exact commands, before and after versions, errors, staged installers and rollback paths to a new folder `<reports_dir>/<UTC timestamp, e.g. 2026-11-09T150000Z>/`, where `reports_dir` comes from the watchlist. Create it with `mkdir -p`. Never overwrite another run's folder or store secrets there.
 - Only after the report is saved, run `python3 -I <skill>/scripts/check.py --commit`. This records what was observed, not that it was fixed. If saving fails, skip the commit.
 
 ## 4. Final message

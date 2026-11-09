@@ -368,7 +368,7 @@ Checks the [pwn.watch](https://pwn.watch) and [Cloudflare Radar Zero Wire](https
 - Never touches production, running apps, databases or project lockfiles; those go in the report for your approval
 - Treats feed content as untrusted data
 
-**Setup:** copy `assets/watchlist.example.json` to `~/.config/security-feed-check/watchlist.json` and edit it. Schedule it with cron, Paseo, `/loop` or `codex exec` for a daily report.
+**Setup:** copy `assets/watchlist.example.json` to `~/.config/security-feed-check/watchlist.json` (or `$SECURITY_FEED_CHECK_HOME/watchlist.json`) and edit it. Schedule it with cron, Paseo, `/loop` or `codex exec` for a daily report.
 
 **Invoke:** `/security-feed-check`
 

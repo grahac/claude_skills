@@ -1,6 +1,6 @@
 # Skills Map
 
-Quick reference for where everything lives. 21 skills across 7 categories.
+Quick reference for where everything lives. 20 skills across 7 categories.
 
 ## Skill Directory Convention
 
@@ -181,6 +181,7 @@ security-feed-check/
   SKILL.md
   gotchas.md
   scripts/check.py                # Feed fetch + seen-state diff + inventory (stdlib only)
+  scripts/test_check.py           # Offline tests
   assets/watchlist.example.json   # Copy to ~/.config/security-feed-check/watchlist.json
 ```
 
